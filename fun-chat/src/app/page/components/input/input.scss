@@ -1,0 +1,13 @@
+.input {
+  position: relative;
+}
+
+.input-hint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%);
+  color: #999;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
