@@ -1,7 +1,7 @@
 import Button from './button/button';
 import Component from './Component';
-import Input from './input/input';
 import { HandlerFn, IComponent } from '../../types/components-types';
+import Input from './input/input';
 
 export const div = (className: string, ...children: IComponent[]) =>
     new Component(
