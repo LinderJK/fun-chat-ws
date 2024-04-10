@@ -22,6 +22,7 @@
   "noInlineConfig": true,
   "rules": {
     "no-console": "off",
+    "class-methods-use-this": "off",
     "@typescript-eslint/no-explicit-any": 2,
     "import/no-extraneous-dependencies": [
       "error",
