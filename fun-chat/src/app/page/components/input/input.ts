@@ -22,7 +22,7 @@ class Input extends Component {
         });
     }
 
-    getValue(): string {
+    get value(): string {
         const inputElement = this.getElement() as HTMLInputElement;
         return inputElement.value;
     }

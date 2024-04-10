@@ -42,7 +42,7 @@ export interface IComponent {
 }
 
 export interface IInput extends IComponent {
-    getValue(): string;
+    get value(): string;
 }
 
 export type ComponentMap = Map<string, IComponent> | undefined;
