@@ -1,12 +1,5 @@
 import './login.scss';
-import {
-    button,
-    div,
-    divText,
-    h1,
-    input,
-    span,
-} from '../components/BaseComponents';
+import { button, div, h1, input, span } from '../components/BaseComponents';
 import { IComponent, IInput, PageView } from '../../types/components-types';
 
 class Login {
@@ -14,7 +7,7 @@ class Login {
 
     loginBtn: IComponent | undefined = undefined;
 
-    inputs: IInput[] = [];
+    inputs: { input: IInput; hint: IComponent }[] = [];
 
     inputsFirstName: IComponent | undefined = undefined;
 
@@ -39,22 +32,17 @@ class Login {
     }
 
     isValid(): boolean {
-        const createHint = (message: string) => {
-            return span('input-hint', `${message}`);
-        };
-
         let valid = false;
         this.inputs.forEach((el) => {
-            const { isValid, message } = this.validate(el);
+            const { isValid, message } = this.validate(el.input);
             valid = isValid;
-            el.deleteChildren();
-            el.append(createHint(message));
+            el.hint.setTextContent(message);
         });
         return valid;
     }
 
     validate(element: IInput) {
-        let message = '';
+        let message = '\u3164';
         let isValid = false;
         switch (true) {
             case element.value.length === 0:
@@ -64,19 +52,14 @@ class Login {
                 message =
                     'Only letters of the English alphabet and the hyphen symbol';
                 break;
-            case element.value === 'input-first-name' &&
-                element.value.length < 3:
+            case element.value.length < 3:
                 message = 'Minimum length - 3 characters';
-                break;
-            case element.value === 'input-second-name' &&
-                element.value.length < 4:
-                message = 'Minimum length - 4 characters';
                 break;
             case !/^[A-Z]/.test(element.value):
                 message = 'The first letter must be in uppercase';
                 break;
-            case element.value.length > 15:
-                message = 'Maximum length - 15 characters';
+            case element.value.length > 10:
+                message = 'Maximum length - 10 characters';
                 break;
             default:
                 isValid = true;
@@ -95,13 +78,19 @@ class Login {
             '',
             'input-first-name'
         );
+        const inputFirstNameHint = span('form-text', '\u3164');
+
         const inputLastName = input(
             'form-control',
             'text',
             '',
             'input-second-name'
         );
-        this.inputs.push(inputFirstName, inputLastName);
+        const inputLastNameHint = span('form-text', '\u3164');
+        this.inputs.push(
+            { input: inputFirstName, hint: inputFirstNameHint },
+            { input: inputLastName, hint: inputLastNameHint }
+        );
 
         const content = div(
             'container-fluid login-container',
@@ -121,7 +110,7 @@ class Login {
                         ),
                         inputFirstName
                     ),
-                    divText('form-text', '')
+                    inputFirstNameHint
                 ),
 
                 div(
@@ -135,9 +124,9 @@ class Login {
                         ),
                         inputLastName
                     ),
-                    divText('form-text', ''),
-                    this.loginBtn
-                )
+                    inputLastNameHint
+                ),
+                this.loginBtn
             )
         );
         return {
