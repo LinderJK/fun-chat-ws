@@ -1,4 +1,4 @@
-import AppManager from './manager/AppManager';
+import AppManager from './components/AppManager';
 
 class App {
     static app: App;

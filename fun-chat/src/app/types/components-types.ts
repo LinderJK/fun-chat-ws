@@ -43,6 +43,8 @@ export interface IComponent {
 
 export interface IInput extends IComponent {
     get value(): string;
+
+    get id(): string;
 }
 
 export type ComponentMap = Map<string, IComponent> | undefined;
@@ -51,5 +53,4 @@ export type PageView = {
     element: IComponent;
     map: ComponentMap;
 };
-
 export type HandlerFn = (evt: Event) => void;

@@ -1,18 +1,38 @@
-class Network {
-    static client = null;
+import { CallbackDataFn, CallbackFn, UserData } from '../types/other-types';
+import { ResponseData } from '../types/response-type';
 
+class Network {
     static socket = new WebSocket('ws://localhost:4000');
 
-    constructor() {
+    static message = null;
+
+    static isConnected = false;
+
+    static onOpenCallback: CallbackFn | null = null;
+
+    static onMessageCallback: CallbackDataFn | null = null;
+
+    constructor(callback: CallbackDataFn) {
         Network.subscribe();
+        Network.onMessageCallback = callback;
+    }
+
+    setOnOpenCallback(callback: CallbackFn) {
+        Network.onOpenCallback = callback;
     }
 
     static subscribe() {
         this.socket.onopen = () => {
             console.log('WebSocket connected');
+            Network.isConnected = true;
+            if (this.onOpenCallback) {
+                this.onOpenCallback();
+            }
         };
         this.socket.onmessage = (event) => {
             console.log('Message received:', event.data);
+            const data = JSON.parse(event.data);
+            this.handleMessage(data);
         };
 
         this.socket.onerror = (error) => {
@@ -21,7 +41,52 @@ class Network {
 
         this.socket.onclose = (event) => {
             console.log('WebSocket closed:', event);
+            Network.isConnected = false;
         };
+    }
+
+    static handleMessage(data: ResponseData) {
+        if (Network.onMessageCallback) {
+            Network.onMessageCallback(data);
+        }
+    }
+
+    get userLogin() {
+        if (Network.message) {
+            const data = JSON.parse(Network.message);
+            console.log(data);
+            if (data.type === 'USER_LOGIN') {
+                return data;
+            }
+        }
+        return null;
+    }
+
+    // static updateData(data: Event) {
+    //     const data = JSON.parse(data);
+    //     switch (data.type) {
+    //       case 'USER_LOGIN':
+    //         Network.
+    //     }
+    // }
+
+    generateRequest() {}
+
+    userAuth(user: UserData) {
+        const request = {
+            id: Network.generateUniqueId(),
+            type: 'USER_LOGIN',
+            payload: {
+                user,
+            },
+        };
+        if (Network.socket.readyState === WebSocket.OPEN) {
+            Network.socket.send(JSON.stringify(request));
+        }
+    }
+
+    static generateUniqueId() {
+        return 'unique_id';
     }
 }
 

@@ -24,8 +24,12 @@ class Input extends Component {
 
     get value(): string {
         const inputElement = this.getElement() as HTMLInputElement;
-        console.log(inputElement.value.length);
         return inputElement.value;
+    }
+
+    get id(): string {
+        const inputElement = this.getElement() as HTMLInputElement;
+        return inputElement.id;
     }
 }
 
