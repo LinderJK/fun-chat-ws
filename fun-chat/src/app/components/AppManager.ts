@@ -1,14 +1,13 @@
 import Login from './login/Login';
 import Network from '../services/Network';
 import Chat from './chat/Chat';
-import User from './User';
-import { ResponseData } from '../types/response-type';
+import { UserData } from '../types/response-type';
 
 class AppManager {
     root: HTMLElement | null = document.querySelector('#root'); // The root HTML element.
 
     // router;
-    user: User | undefined = undefined;
+    // user: User | undefined = undefined;
 
     login;
 
@@ -18,8 +17,9 @@ class AppManager {
 
     constructor() {
         // this.router = new Router();
-        this.network = new Network(this.handleNetworkData.bind(this));
+        this.network = new Network();
         this.login = new Login(this.startLogin.bind(this));
+        this.listenSocket();
     }
 
     public start(): void {
@@ -31,26 +31,58 @@ class AppManager {
 
     startLogin(): void {
         const user = this.login.getSessionUser();
+        console.log(user, 'USER SESSION');
         if (user) {
-            this.network.setOnOpenCallback(() => {
-                this.network.userAuth(user);
-            });
+            // this.network.setOnOpenCallback(() => {
+            //     this.network.userAuth(user);
+            // });
+            this.network.userAuth(user);
+            // this.startChat({ login: user.login, isLogined: true });
         } else {
             this.render(this.login.view);
         }
     }
 
-    handleNetworkData(data: ResponseData) {
+    listenSocket() {
+        Network.socket.onmessage = (event) => {
+            console.log('WORK LOGGER', event.data);
+            this.messageHandler(event);
+        };
+
+        Network.socket.onopen = () => {
+            this.startLogin();
+        };
+    }
+
+    messageHandler(event: MessageEvent) {
+        const data = JSON.parse(event.data);
         if (data.type === 'USER_LOGIN') {
             this.startChat(data.payload.user);
         }
+        if (data.type === 'USER_LOGOUT') {
+            this.login.logout();
+            this.render(this.login.view);
+        }
+        if (data.type === 'USER_ACTIVE') {
+            this.chat?.renderUsers(data.payload.users);
+        }
+        if (data.type === 'USER_INACTIVE') {
+            this.chat?.renderUsers(data.payload.users);
+        }
     }
 
-    startChat(user: { login: string; isLogined: boolean }) {
-        this.user = new User(user.login);
-        console.log(user, 'USERRR!!');
-        this.chat = new Chat(user);
-        this.render(this.chat.view);
+    // handleNetworkData(data: ResponseData) {
+    //     if (data.type === 'USER_LOGIN') {
+    //         this.startChat(data.payload.user);
+    //     }
+    // }
+
+    startChat(user: UserData) {
+        const pass = this.login.getSessionUser()?.password;
+        if (pass) {
+            this.chat = new Chat(user, pass);
+            this.render(this.chat.view);
+        }
     }
 
     render(element: HTMLElement) {

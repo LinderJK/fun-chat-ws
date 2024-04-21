@@ -1,5 +1,9 @@
-import { CallbackDataFn, CallbackFn, UserData } from '../types/other-types';
-import { ResponseData } from '../types/response-type';
+import {
+    CallbackDataFn,
+    CallbackFn,
+    UserLoginData,
+} from '../types/other-types';
+import { ServerRequest } from '../types/response-type';
 
 class Network {
     static socket = new WebSocket('ws://localhost:4000');
@@ -12,27 +16,26 @@ class Network {
 
     static onMessageCallback: CallbackDataFn | null = null;
 
-    constructor(callback: CallbackDataFn) {
+    constructor() {
         Network.subscribe();
-        Network.onMessageCallback = callback;
     }
 
-    setOnOpenCallback(callback: CallbackFn) {
-        Network.onOpenCallback = callback;
-    }
+    // setOnOpenCallback(callback: CallbackFn) {
+    //     Network.onOpenCallback = callback;
+    // }
 
     static subscribe() {
         this.socket.onopen = () => {
             console.log('WebSocket connected');
             Network.isConnected = true;
-            if (this.onOpenCallback) {
-                this.onOpenCallback();
-            }
+            // if (this.onOpenCallback) {
+            //     this.onOpenCallback();
+            // }
         };
         this.socket.onmessage = (event) => {
             console.log('Message received:', event.data);
-            const data = JSON.parse(event.data);
-            this.handleMessage(data);
+            // const data = JSON.parse(event.data);
+            // this.handleMessage(data);
         };
 
         this.socket.onerror = (error) => {
@@ -45,22 +48,22 @@ class Network {
         };
     }
 
-    static handleMessage(data: ResponseData) {
-        if (Network.onMessageCallback) {
-            Network.onMessageCallback(data);
-        }
-    }
+    // static handleMessage(data: ResponseData) {
+    //     if (Network.onMessageCallback) {
+    //         Network.onMessageCallback(data);
+    //     }
+    // }
 
-    get userLogin() {
-        if (Network.message) {
-            const data = JSON.parse(Network.message);
-            console.log(data);
-            if (data.type === 'USER_LOGIN') {
-                return data;
-            }
-        }
-        return null;
-    }
+    // get userLogin() {
+    //     if (Network.message) {
+    //         const data = JSON.parse(Network.message);
+    //         console.log(data);
+    //         if (data.type === 'USER_LOGIN') {
+    //             return data;
+    //         }
+    //     }
+    //     return null;
+    // }
 
     // static updateData(data: Event) {
     //     const data = JSON.parse(data);
@@ -70,9 +73,9 @@ class Network {
     //     }
     // }
 
-    generateRequest() {}
+    // generateRequest() {}
 
-    userAuth(user: UserData) {
+    userAuth(user: UserLoginData) {
         const request = {
             id: Network.generateUniqueId(),
             type: 'USER_LOGIN',
@@ -80,8 +83,15 @@ class Network {
                 user,
             },
         };
+        console.log('send user', user);
         if (Network.socket.readyState === WebSocket.OPEN) {
             Network.socket.send(JSON.stringify(request));
+        }
+    }
+
+    static send<T>(req: ServerRequest<T>) {
+        if (Network.socket.readyState === WebSocket.OPEN) {
+            Network.socket.send(JSON.stringify(req));
         }
     }
 
