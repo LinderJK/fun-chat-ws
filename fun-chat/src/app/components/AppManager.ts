@@ -56,6 +56,7 @@ class AppManager {
 
     messageHandler(event: MessageEvent) {
         const data = JSON.parse(event.data);
+        console.log('DATA!!!', data);
         if (data.type === 'USER_LOGIN') {
             this.startChat(data.payload.user);
         }
@@ -68,6 +69,12 @@ class AppManager {
         }
         if (data.type === 'USER_INACTIVE') {
             this.chat?.renderUsers(data.payload.users);
+        }
+        if (data.type === 'USER_EXTERNAL_LOGOUT') {
+            this.chat?.chatInit();
+        }
+        if (data.type === 'USER_EXTERNAL_LOGIN') {
+            this.chat?.chatInit();
         }
     }
 

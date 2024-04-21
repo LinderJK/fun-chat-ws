@@ -1,6 +1,6 @@
 import './user.scss';
 import { UserData } from '../../types/response-type';
-import { div, divText, p } from '../../page/components/BaseComponents';
+import { div, p, span } from '../../page/components/BaseComponents';
 import { IComponent } from '../../types/components-types';
 import Network from '../../services/Network';
 
@@ -37,12 +37,20 @@ class User {
         this.view = div(
             'd-flex text-muted pt-3 user-item',
             icon,
-            divText('pb-3 mb-0 small lh-sm w-100', `${this.privateName}`)
+            div(
+                'pb-3 mb-0 small lh-sm w-100',
+                p('user-item__name', `${this.privateName}`),
+                span('user-item__status', `${this.createStatusView()}`)
+            )
         );
+        this.view.addListener('click', () => {
+            console.log('GOO Message');
+        });
         return this.view;
     }
 
     logout() {
+        this.isLogined = false;
         console.log('logout');
         const payloadObj = {
             user: {
@@ -51,6 +59,10 @@ class User {
             },
         };
         Network.send({ id: '', type: 'USER_LOGOUT', payload: payloadObj });
+    }
+
+    createStatusView() {
+        return this.status ? 'Online' : 'Offline';
     }
 
     shortName() {

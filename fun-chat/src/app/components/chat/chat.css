@@ -6,23 +6,26 @@
   justify-content: space-between;
 }
 .chat-nav p {
-  margin: 0px;
+  margin: 0;
 }
 
 .chat-fields {
   display: flex;
   gap: 5px;
   flex-direction: row;
+  min-height: 500px;
 }
 
 .users-fields {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .users-active-field,
 .users-offline-field {
   padding: 5px;
+  width: 100%;
 }
 
 /*# sourceMappingURL=chat.css.map */

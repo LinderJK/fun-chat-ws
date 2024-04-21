@@ -1,6 +1,7 @@
 .user-item {
   border-radius: 5px;
   padding: 5px;
+  //width: 100%;
 
   &:hover {
     background-color: #b29660;
@@ -18,10 +19,12 @@
     background-color: #e6f6fa;
     border-radius: 50%;
 
-    & p {
-      font-weight: bold;
-      margin: 0;
-    }
+
+  }
+
+  & p {
+    font-weight: bold;
+    margin: 0;
   }
 
 

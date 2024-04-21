@@ -1,9 +1,9 @@
 import './chat.scss';
 import { button, div, nav, p } from '../../page/components/BaseComponents';
-import User from '../user/User';
 import Network from '../../services/Network';
 import { IComponent } from '../../types/components-types';
 import { UserData } from '../../types/response-type';
+import User from '../user/User';
 
 class Chat {
     userName: string;
@@ -31,23 +31,41 @@ class Chat {
     }
 
     chatInit() {
+        this.usersActiveList?.deleteChildren();
+        this.usersOfflineList?.deleteChildren();
         Network.send({ id: null, type: 'USER_ACTIVE', payload: null });
         Network.send({ id: null, type: 'USER_INACTIVE', payload: null });
     }
 
     renderUsers(data: UserData[]) {
-        this.users = data.map((el) => {
-            // console.log(user);
+        // this.usersActiveList?.deleteChildren();
+        // this.usersOfflineList?.deleteChildren();
+        data.forEach((el) => {
             const chatUser = new User(el);
             const viewUser = chatUser.render();
             if (chatUser.status) {
+                // this.usersActiveList?.deleteChildren();
                 this.usersActiveList!.append(viewUser);
             } else {
+                // this.usersOfflineList?.deleteChildren();
                 this.usersOfflineList!.append(viewUser);
             }
-            return chatUser;
-            // console.log(user);
         });
+
+        // this.users = data.map((el) => {
+        //     // console.log(user);
+        //     const chatUser = new User(el);
+        //     const viewUser = chatUser.render();
+        //     if (chatUser.status) {
+        //         this.usersActiveList?.deleteChildren();
+        //         this.usersActiveList!.append(viewUser);
+        //     } else {
+        //         this.usersOfflineList?.deleteChildren();
+        //         this.usersOfflineList!.append(viewUser);
+        //     }
+        //     return chatUser;
+        //     // console.log(user);
+        // });
 
         console.log(this.users);
     }
@@ -57,11 +75,8 @@ class Chat {
             this.user.logout();
         });
         const btnInfo = button('chat-info', 'Information', () => {});
-        this.usersActiveList = div('users-active-field', p('', 'Users online'));
-        this.usersOfflineList = div(
-            'users-offline-field',
-            p('', 'Users offline')
-        );
+        this.usersActiveList = div('users-active-field');
+        this.usersOfflineList = div('users-offline-field');
 
         const content = div(
             'container chat-container',
@@ -74,7 +89,9 @@ class Chat {
                 'chat-fields',
                 div(
                     'users-fields col-3 border border-right-0 border-dark',
+                    p('', 'Users online'),
                     this.usersActiveList,
+                    p('', 'Users offline'),
                     this.usersOfflineList
                 ),
                 div('message-field col-9 border border-dark', p('', 'message'))
