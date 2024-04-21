@@ -5,5 +5,9 @@
 .login-content {
   max-width: 500px;
   margin: 0 auto;
+
+  &__description {
+    margin: 10px 0;
+  }
 }
 

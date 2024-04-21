@@ -4,10 +4,11 @@ import {
     div,
     h1,
     input,
+    p,
     span,
 } from '../../page/components/BaseComponents';
 import { IComponent, IInput } from '../../types/components-types';
-import { CallbackFn, UserData } from '../../types/other-types';
+import { CallbackFn, UserLoginData } from '../../types/other-types';
 
 class Login {
     view: HTMLElement;
@@ -34,7 +35,7 @@ class Login {
         const valid = this.isValid();
         console.log(valid, 'this valid?');
         if (valid) {
-            const inputData = this.collectInputData() as UserData;
+            const inputData = this.collectInputData() as UserLoginData;
             sessionStorage.setItem('user', JSON.stringify(inputData));
             if (this.callback) {
                 this.callback();
@@ -45,11 +46,15 @@ class Login {
         return false;
     }
 
+    logout() {
+        sessionStorage.clear();
+    }
+
     getSessionUser() {
         const user = sessionStorage.getItem('user');
         console.log(user, 'user from session');
         if (user) {
-            return JSON.parse(user) as UserData;
+            return JSON.parse(user) as UserLoginData;
         }
         return null;
     }
@@ -136,17 +141,13 @@ class Login {
             div(
                 'login-content',
                 h1('login-content__title', 'Welcome to FUN-CHAT'),
-                span('login-content__description', 'Please login'),
+                p('login-content__description', 'Please login'),
 
                 div(
                     'form mb-3 align-items-center',
                     div(
                         'input-group',
-                        span(
-                            'input-group-text',
-                            'First Name',
-                            'login-first-name'
-                        ),
+                        span('input-group-text', 'Login', 'login-first-name'),
                         inputLogin
                     ),
                     inputLoginHint
@@ -158,7 +159,7 @@ class Login {
                         'input-group col-8',
                         span(
                             'input-group-text',
-                            'Surname',
+                            'Password',
                             'login-second-name'
                         ),
                         inputPassword

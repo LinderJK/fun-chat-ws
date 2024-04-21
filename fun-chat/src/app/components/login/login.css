@@ -6,5 +6,8 @@
   max-width: 500px;
   margin: 0 auto;
 }
+.login-content__description {
+  margin: 10px 0;
+}
 
 /*# sourceMappingURL=login.css.map */
