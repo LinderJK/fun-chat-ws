@@ -1,0 +1,28 @@
+.chat-nav {
+  margin: 20px 0;
+  padding: 10px;
+  align-items: center;
+  border: 1px solid black;
+  justify-content: space-between;
+}
+.chat-nav p {
+  margin: 0px;
+}
+
+.chat-fields {
+  display: flex;
+  gap: 5px;
+  flex-direction: row;
+}
+
+.users-fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.users-active-field,
+.users-offline-field {
+  padding: 5px;
+}
+
+/*# sourceMappingURL=chat.css.map */
