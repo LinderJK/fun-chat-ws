@@ -61,3 +61,14 @@ type MessageSendResponse = {
         };
     };
 };
+
+export type ServerRequest<T> = {
+    id: string | null;
+    type: string;
+    payload: T;
+};
+
+export type UserData = {
+    login: string;
+    isLogined: boolean;
+};
