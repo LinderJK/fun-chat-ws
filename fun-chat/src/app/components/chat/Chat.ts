@@ -12,6 +12,7 @@ import Network from '../../services/Network';
 import { IComponent } from '../../types/components-types';
 import { UserData } from '../../types/response-type';
 import User from '../user/User';
+import Communication from '../Communication/Communication';
 
 class Chat {
     userName: string;
@@ -30,12 +31,21 @@ class Chat {
 
     isLoggedIn: boolean = false;
 
+    chatField: IComponent | undefined = undefined;
+
+    currentChat: Communication | null = null;
+
+    btnSend: IComponent | undefined = undefined;
+
     constructor(user: UserData, password: string) {
         this.user = new User(user, password);
         this.view = this.createView().element.getElement();
         this.userName = user.login;
         this.isLoggedIn = user.isLogined;
         this.chatInit();
+        if (!this.currentChat) {
+            this.btnSend?.setAttributes({ disabled: true });
+        }
     }
 
     chatInit() {
@@ -51,6 +61,7 @@ class Chat {
         data.forEach((el) => {
             const chatUser = new User(el);
             const viewUser = chatUser.render();
+            chatUser.view?.addListener('click', () => this.startChat(el));
             if (chatUser.status) {
                 // this.usersActiveList?.deleteChildren();
                 this.usersActiveList!.append(viewUser);
@@ -59,23 +70,14 @@ class Chat {
                 this.usersOfflineList!.append(viewUser);
             }
         });
+    }
 
-        // this.users = data.map((el) => {
-        //     // console.log(user);
-        //     const chatUser = new User(el);
-        //     const viewUser = chatUser.render();
-        //     if (chatUser.status) {
-        //         this.usersActiveList?.deleteChildren();
-        //         this.usersActiveList!.append(viewUser);
-        //     } else {
-        //         this.usersOfflineList?.deleteChildren();
-        //         this.usersOfflineList!.append(viewUser);
-        //     }
-        //     return chatUser;
-        //     // console.log(user);
-        // });
-
-        console.log(this.users);
+    private startChat(data: UserData) {
+        console.log('chtat open');
+        this.currentChat = new Communication(data.login, data.isLogined);
+        this.chatField?.deleteChildren();
+        this.chatField?.append(this.currentChat.view);
+        this.btnSend?.deleteAttribute('disabled');
     }
 
     createView() {
@@ -85,6 +87,11 @@ class Chat {
         const btnInfo = button('chat-info', 'Information', () => {});
         this.usersActiveList = div('users-active-field');
         this.usersOfflineList = div('users-offline-field');
+        this.chatField = div(
+            'chat-content',
+            p('', 'Select user for start message')
+        );
+        this.btnSend = button('send-message', 'Send', () => {});
 
         const content = div(
             'container chat-container',
@@ -105,11 +112,11 @@ class Chat {
                 ),
                 div(
                     'd-flex flex-column justify-content-between col-9 border border-dark p-2 message-field',
-                    div('chat-content', p('', 'Select user for start message')),
+                    this.chatField,
                     div(
                         'd-flex gap-2 input-message-container',
                         input('input-message', 'text', 'Write message', ''),
-                        button('send-message', 'Send', () => {})
+                        this.btnSend
                     )
                 )
             ),

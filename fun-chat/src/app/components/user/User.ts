@@ -44,7 +44,7 @@ class User {
             )
         );
         this.view.addListener('click', () => {
-            console.log('GOO Message');
+            console.log('GOO Message', this.login);
         });
         return this.view;
     }
