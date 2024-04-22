@@ -4,6 +4,7 @@ import {
     button,
     div,
     img,
+    input,
     nav,
     p,
 } from '../../page/components/BaseComponents';
@@ -102,7 +103,15 @@ class Chat {
                     p('', 'Users offline'),
                     this.usersOfflineList
                 ),
-                div('message-field col-9 border border-dark', p('', 'message'))
+                div(
+                    'd-flex flex-column justify-content-between col-9 border border-dark p-2 message-field',
+                    div('chat-content', p('', 'Select user for start message')),
+                    div(
+                        'd-flex gap-2 input-message-container',
+                        input('input-message', 'text', 'Write message', ''),
+                        button('send-message', 'Send', () => {})
+                    )
+                )
             ),
             div(
                 'd-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top footer',
