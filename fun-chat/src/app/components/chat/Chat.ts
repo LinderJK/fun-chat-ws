@@ -1,5 +1,12 @@
 import './chat.scss';
-import { button, div, nav, p } from '../../page/components/BaseComponents';
+import {
+    a,
+    button,
+    div,
+    img,
+    nav,
+    p,
+} from '../../page/components/BaseComponents';
 import Network from '../../services/Network';
 import { IComponent } from '../../types/components-types';
 import { UserData } from '../../types/response-type';
@@ -83,6 +90,7 @@ class Chat {
             nav(
                 'nav chat-nav',
                 p('user-name', `${this.user.login}`),
+                p('app-name', `Fun-chat`),
                 div('btn-chat-nav', btnLogout, btnInfo)
             ),
             div(
@@ -95,6 +103,20 @@ class Chat {
                     this.usersOfflineList
                 ),
                 div('message-field col-9 border border-dark', p('', 'message'))
+            ),
+            div(
+                'd-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top footer',
+                p('footer-year', '2024'),
+                a('footer-author', 'LinderJK', 'https://github.com/LinderJK'),
+                div(
+                    'footer-img',
+                    a(
+                        'footer-school-link',
+                        '',
+                        'https://rs.school/courses/javascript-mentoring-program',
+                        img('footer-school', './assets/img/rsschool.jpg')
+                    )
+                )
             )
         );
 

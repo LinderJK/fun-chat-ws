@@ -18,6 +18,30 @@ export const divText = (className: string, textContent: string) =>
         className,
         textContent,
     });
+
+export const a = (
+    className: string,
+    textContent: string,
+    href: string = '',
+    ...children: IComponent[]
+) =>
+    new Component(
+        {
+            tagName: 'a',
+            className,
+            textContent,
+            attributes: { href },
+        },
+        ...children
+    );
+
+export const img = (className: string, src: string = '') =>
+    new Component({
+        tagName: 'img',
+        className,
+        attributes: { src },
+    });
+
 export const p = (className: string, textContent: string) =>
     new Component({
         tagName: 'p',
