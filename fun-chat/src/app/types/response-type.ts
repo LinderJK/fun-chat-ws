@@ -3,7 +3,8 @@ export type ResponseData =
     | UserLogoutResponse
     | UserActiveResponse
     | UserInactiveResponse
-    | MessageSendResponse;
+    | MessageSendResponse
+    | MsgFromUserResponse;
 
 type UserLoginResponse = {
     id: string;
@@ -59,6 +60,27 @@ type MessageSendResponse = {
                 isEdited: boolean;
             };
         };
+    };
+};
+
+type MsgFromUserResponse = {
+    id: string;
+    type: 'MSG_FROM_USER';
+    payload: {
+        messages: Message[];
+    };
+};
+
+export type Message = {
+    id: string;
+    from: string;
+    to: string;
+    text: string;
+    datetime: number;
+    status: {
+        isDelivered: boolean;
+        isReaded: boolean;
+        isEdited: boolean;
     };
 };
 

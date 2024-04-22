@@ -9,7 +9,7 @@ import {
     p,
 } from '../../page/components/BaseComponents';
 import Network from '../../services/Network';
-import { IComponent } from '../../types/components-types';
+import { IComponent, IInput } from '../../types/components-types';
 import { UserData } from '../../types/response-type';
 import User from '../user/User';
 import Communication from '../Communication/Communication';
@@ -29,11 +29,13 @@ class Chat {
 
     usersOfflineList: IComponent | undefined = undefined;
 
+    inputMessage: IInput | undefined = undefined;
+
     isLoggedIn: boolean = false;
 
     chatField: IComponent | undefined = undefined;
 
-    currentChat: Communication | null = null;
+    communication: Communication | null = null;
 
     btnSend: IComponent | undefined = undefined;
 
@@ -43,7 +45,7 @@ class Chat {
         this.userName = user.login;
         this.isLoggedIn = user.isLogined;
         this.chatInit();
-        if (!this.currentChat) {
+        if (!this.communication) {
             this.btnSend?.setAttributes({ disabled: true });
         }
     }
@@ -72,12 +74,31 @@ class Chat {
         });
     }
 
+    // updateMessage(data: ResponseData) {
+    //     if (data.type === 'MSG_SEND') {
+    //         this.communication?.appendMessage(data.payload.message.text);
+    //     }
+    // }
+
     private startChat(data: UserData) {
         console.log('chtat open');
-        this.currentChat = new Communication(data.login, data.isLogined);
+        this.communication = new Communication(data.login, data.isLogined);
         this.chatField?.deleteChildren();
-        this.chatField?.append(this.currentChat.view);
+        this.chatField?.append(this.communication.view);
         this.btnSend?.deleteAttribute('disabled');
+        this.btnSend?.addListener('click', () => {
+            if (this.communication) {
+                this.communication.send(this.getInputText());
+            }
+        });
+        this.communication.getHistory();
+    }
+
+    getInputText() {
+        if (this.inputMessage) {
+            return this.inputMessage.value.trim();
+        }
+        return '';
     }
 
     createView() {
@@ -92,6 +113,7 @@ class Chat {
             p('', 'Select user for start message')
         );
         this.btnSend = button('send-message', 'Send', () => {});
+        this.inputMessage = input('input-message', 'text', 'Write message', '');
 
         const content = div(
             'container chat-container',
@@ -115,7 +137,7 @@ class Chat {
                     this.chatField,
                     div(
                         'd-flex gap-2 input-message-container',
-                        input('input-message', 'text', 'Write message', ''),
+                        this.inputMessage,
                         this.btnSend
                     )
                 )

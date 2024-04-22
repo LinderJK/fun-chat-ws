@@ -2,4 +2,9 @@
   border: 1px solid black;
 }
 
+.dialog-container {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
 /*# sourceMappingURL=Communication.css.map */

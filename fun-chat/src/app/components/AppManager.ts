@@ -76,6 +76,12 @@ class AppManager {
         if (data.type === 'USER_EXTERNAL_LOGIN') {
             this.chat?.chatInit();
         }
+        if (data.type === 'MSG_SEND') {
+            this.chat?.communication?.appendMessage(data);
+        }
+        if (data.type === 'MSG_FROM_USER') {
+            this.chat?.communication?.updateHistory(data);
+        }
     }
 
     // handleNetworkData(data: ResponseData) {
