@@ -13,7 +13,7 @@ import { IComponent, IInput } from '../../types/components-types';
 import { UserData } from '../../types/response-type';
 import User from '../user/User';
 import Communication from '../Communication/Communication';
-import scrollToBottom from '../../utils/utils';
+import { scrollToBottom } from '../../utils/utils';
 
 class Chat {
     userName: string;

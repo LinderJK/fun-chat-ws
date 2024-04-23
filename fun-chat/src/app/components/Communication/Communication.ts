@@ -3,7 +3,7 @@ import { div, p } from '../../page/components/BaseComponents';
 import Network from '../../services/Network';
 import { IComponent } from '../../types/components-types';
 import { Message, ResponseData } from '../../types/response-type';
-import scrollToBottom from '../../utils/utils';
+import { scrollToBottom } from '../../utils/utils';
 
 class Communication {
     sendTo;
