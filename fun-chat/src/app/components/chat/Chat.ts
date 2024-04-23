@@ -30,6 +30,8 @@ class Chat {
 
     usersOfflineList: IComponent | undefined = undefined;
 
+    usersSearchList: IComponent | undefined = undefined;
+
     inputMessage: IInput | undefined = undefined;
 
     isLoggedIn: boolean = false;
@@ -40,6 +42,8 @@ class Chat {
 
     btnSend: IComponent | undefined = undefined;
 
+    searchUserInput: IInput | undefined = undefined;
+
     constructor(user: UserData, password: string) {
         this.user = new User(user, password);
         this.view = this.createView().element.getElement();
@@ -49,6 +53,40 @@ class Chat {
         if (!this.communication) {
             this.btnSend?.setAttributes({ disabled: true });
         }
+        this.searchUserInput?.addListener('input', (e) => {
+            this.searchUser(e);
+        });
+    }
+
+    searchUser(e: Event) {
+        const inputField = e.target as HTMLInputElement;
+        const inputValue = inputField.value;
+        console.log(inputValue);
+        console.log('CURRENT USERS', this.users);
+        if (
+            this.users?.length === 0 ||
+            !this.users ||
+            inputValue.length === 0
+        ) {
+            this.usersSearchList?.deleteChildren();
+            return;
+        }
+        const filteredUsers = this.users.filter((el) =>
+            el.login.toLowerCase().includes(inputValue.toLowerCase())
+        );
+        if (filteredUsers.length > 0) {
+            this.renderFiteredUser(filteredUsers);
+            console.log(filteredUsers, 'FILTERED USERS!!!');
+        }
+    }
+
+    renderFiteredUser(users: User[]) {
+        this.usersSearchList?.deleteChildren();
+        users.forEach((el) => {
+            if (el.view) {
+                this.usersSearchList!.append(el.view);
+            }
+        });
     }
 
     chatInit() {
@@ -59,10 +97,12 @@ class Chat {
     }
 
     renderUsers(data: UserData[]) {
+        this.users = [];
         // this.usersActiveList?.deleteChildren();
         // this.usersOfflineList?.deleteChildren();
         data.forEach((el) => {
             const chatUser = new User(el);
+            this.users?.push(chatUser);
             const viewUser = chatUser.render();
             chatUser.view?.addListener('click', () => this.startChat(el));
             if (chatUser.status) {
@@ -99,8 +139,12 @@ class Chat {
     }
 
     sendMessage() {
+        const textMessage = this.getInputText();
+        if (textMessage.length === 0) {
+            return;
+        }
         if (this.communication) {
-            this.communication.send(this.getInputText());
+            this.communication.send(textMessage);
         }
         this.inputMessage?.deleteValue();
         if (this.communication?.dialogContainer?.getElement()) {
@@ -121,6 +165,7 @@ class Chat {
         });
         const btnInfo = button('chat-info', 'Information', () => {});
         this.usersActiveList = div('users-active-field');
+        this.usersSearchList = div('users-search-field');
         this.usersOfflineList = div('users-offline-field');
         this.chatField = div(
             'chat-content',
@@ -128,6 +173,8 @@ class Chat {
         );
         this.btnSend = button('send-message', 'Send', () => {});
         this.inputMessage = input('input-message', 'text', 'Write message', '');
+
+        this.searchUserInput = input('123', 'text', 'Search', '');
 
         const content = div(
             'container chat-container',
@@ -139,8 +186,11 @@ class Chat {
             ),
             div(
                 'chat-fields',
+
                 div(
                     'users-fields col-3 border border-right-0 border-dark',
+                    this.searchUserInput,
+                    this.usersSearchList,
                     p('', 'Users online'),
                     this.usersActiveList,
                     p('', 'Users offline'),

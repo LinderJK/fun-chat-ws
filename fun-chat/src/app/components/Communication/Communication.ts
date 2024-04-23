@@ -1,5 +1,5 @@
 import './Communication.scss';
-import { div, p } from '../../page/components/BaseComponents';
+import { div, divText, p } from '../../page/components/BaseComponents';
 import Network from '../../services/Network';
 import { IComponent } from '../../types/components-types';
 import { Message, ResponseData } from '../../types/response-type';
@@ -89,6 +89,12 @@ class Communication {
     updateHistory(data: ResponseData) {
         if (data.type === 'MSG_FROM_USER') {
             const { messages } = data.payload;
+            if (messages.length === 0) {
+                this.dialogContainer?.append(
+                    divText('', 'Its start dialog, go chatting')
+                );
+                return;
+            }
             messages.forEach((message) => {
                 this.createMessage(message);
             });
