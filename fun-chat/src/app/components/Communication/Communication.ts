@@ -2,7 +2,7 @@ import './Communication.scss';
 import { div, divText, p } from '../../page/components/BaseComponents';
 import Network from '../../services/Network';
 import { IComponent } from '../../types/components-types';
-import { Message } from '../../types/response-type';
+import { Message, ResponseData } from '../../types/response-type';
 import { getDataFromTimeStamp, scrollToBottom } from '../../utils/utils';
 
 class Communication {
@@ -22,7 +22,7 @@ class Communication {
 
     createView() {
         this.dialogContainer = div('dialog-container');
-        const view = div(
+        return div(
             'dialog-view',
             div(
                 'dialog-info',
@@ -30,30 +30,21 @@ class Communication {
             ),
             this.dialogContainer
         );
-        return view;
     }
 
-    // appendMessage(message: ResponseData) {
-    //     if (message.type === 'MSG_SEND') {
-    //         // if (message.payload.message.to !== this.sendTo) {
-    //         //     return;
-    //         // }
-    //         const view = div(
-    //             'message message--right',
-    //             p('message__author', `${message.payload.message.from}`),
-    //             p('message__text', `${message.payload.message.text}`),
-    //             p(
-    //                 'message__time',
-    //                 `${getDataFromTimeStamp(message.payload.message.datetime)}`
-    //             )
-    //         );
-    //         if (this.dialogContainer) {
-    //             this.dialogContainer.append(view);
-    //         }
-    //     }
-    // }
+    appendMessage(data: ResponseData) {
+        if (data.type === 'MSG_SEND') {
+            if (data.payload.message.from !== this.sendTo) {
+                return;
+            }
+            this.createMessage(data.payload.message);
+        }
+    }
 
     createMessage(data: Message) {
+        // if (data.to !== this.sendTo) {
+        //     return;
+        // }
         let msgClass: string;
         if (data.from === this.sendTo) {
             msgClass = 'message message--left';
@@ -77,18 +68,6 @@ class Communication {
         }
     }
 
-    getHistory() {
-        Network.send({
-            id: '',
-            type: 'MSG_FROM_USER',
-            payload: {
-                user: {
-                    login: this.sendTo,
-                },
-            },
-        });
-    }
-
     updateHistory(data: Message[]) {
         console.log(data, 'MYY DATA!!!');
         if (data.length === 0) {
@@ -106,6 +85,18 @@ class Communication {
             scrollToBottom(this.dialogContainer?.getElement());
         }
         // const { messages } = data.payload;
+    }
+
+    getHistory() {
+        Network.send({
+            id: '',
+            type: 'MSG_FROM_USER',
+            payload: {
+                user: {
+                    login: this.sendTo,
+                },
+            },
+        });
     }
 
     send(message: string) {

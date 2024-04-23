@@ -77,7 +77,15 @@ class AppManager {
             this.chat?.chatInit();
         }
         if (data.type === 'MSG_SEND') {
-            this.chat?.communication?.createMessage(data.payload.message);
+            // this.chat?.communication?.createMessage(data.payload.message);
+            console.log(
+                'MSG_SEND DATA DELIVERY',
+                data,
+                data.type,
+                this.chat,
+                this.chat?.communication
+            );
+            this.chat?.communication?.appendMessage(data);
         }
         if (data.type === 'MSG_FROM_USER') {
             this.chat?.communication?.updateHistory(data.payload.messages);
