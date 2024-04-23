@@ -2,6 +2,7 @@ import Login from './login/Login';
 import Network from '../services/Network';
 import Chat from './chat/Chat';
 import { UserData } from '../types/response-type';
+import Communication from './Communication/Communication';
 
 class AppManager {
     root: HTMLElement | null = document.querySelector('#root'); // The root HTML element.
@@ -31,7 +32,6 @@ class AppManager {
 
     startLogin(): void {
         const user = this.login.getSessionUser();
-        console.log(user, 'USER SESSION');
         if (user) {
             // this.network.setOnOpenCallback(() => {
             //     this.network.userAuth(user);
@@ -45,7 +45,7 @@ class AppManager {
 
     listenSocket() {
         Network.socket.onmessage = (event) => {
-            console.log('WORK LOGGER', event.data);
+            // console.log('WORK LOGGER', event.data);
             this.messageHandler(event);
         };
 
@@ -56,7 +56,6 @@ class AppManager {
 
     messageHandler(event: MessageEvent) {
         const data = JSON.parse(event.data);
-        console.log('DATA!!!', data);
         if (data.type === 'USER_LOGIN') {
             this.startChat(data.payload.user);
         }
@@ -77,26 +76,33 @@ class AppManager {
             this.chat?.chatInit();
         }
         if (data.type === 'MSG_SEND') {
-            // this.chat?.communication?.createMessage(data.payload.message);
-            console.log(
-                'MSG_SEND DATA DELIVERY',
-                data,
-                data.type,
-                this.chat,
-                this.chat?.communication
-            );
+            console.log(data.payload);
+            if (
+                data.payload.message.from !==
+                    this.chat?.communication?.userFrom &&
+                data.payload.message.from !== this.chat?.communication?.userTo
+            ) {
+                // const otherMessage = new Communication(
+                //     data.payload.message.from,
+                //     this.chat?.user.login,
+                //     this.chat?.user.
+                // );
+                if (this.chat) {
+                    const com = new Communication(
+                        data.payload.message.from,
+                        this.chat?.user.login,
+                        this.chat?.user.status
+                    );
+                    com.createMessage(data.payload.message);
+                    return;
+                }
+            }
             this.chat?.communication?.appendMessage(data);
         }
         if (data.type === 'MSG_FROM_USER') {
             this.chat?.communication?.updateHistory(data.payload.messages);
         }
     }
-
-    // handleNetworkData(data: ResponseData) {
-    //     if (data.type === 'USER_LOGIN') {
-    //         this.startChat(data.payload.user);
-    //     }
-    // }
 
     startChat(user: UserData) {
         const pass = this.login.getSessionUser()?.password;

@@ -61,8 +61,6 @@ class Chat {
     searchUser(e: Event) {
         const inputField = e.target as HTMLInputElement;
         const inputValue = inputField.value;
-        console.log(inputValue);
-        console.log('CURRENT USERS', this.users);
         if (
             this.users?.length === 0 ||
             !this.users ||
@@ -76,7 +74,6 @@ class Chat {
         );
         if (filteredUsers.length > 0) {
             this.renderFilteredUser(filteredUsers);
-            console.log(filteredUsers, 'FILTERED USERS!!!');
         }
     }
 
@@ -98,8 +95,6 @@ class Chat {
 
     renderUsers(data: UserData[]) {
         this.users = [];
-        // this.usersActiveList?.deleteChildren();
-        // this.usersOfflineList?.deleteChildren();
         data.forEach((el) => {
             if (el.login === this.user.login) {
                 return;
@@ -109,24 +104,19 @@ class Chat {
             const viewUser = chatUser.render();
             chatUser.view?.addListener('click', () => this.startChat(el));
             if (chatUser.status) {
-                // this.usersActiveList?.deleteChildren();
                 this.usersActiveList!.append(viewUser);
             } else {
-                // this.usersOfflineList?.deleteChildren();
                 this.usersOfflineList!.append(viewUser);
             }
         });
     }
 
-    // updateMessage(data: ResponseData) {
-    //     if (data.type === 'MSG_SEND') {
-    //         this.communication?.appendMessage(data.payload.message.text);
-    //     }
-    // }
-
     private startChat(data: UserData) {
-        console.log('chtat open');
-        this.communication = new Communication(data.login, data.isLogined);
+        this.communication = new Communication(
+            this.user.login,
+            data.login,
+            data.isLogined
+        );
         this.chatField?.deleteChildren();
         this.chatField?.append(this.communication.view);
         this.btnSend?.deleteAttribute('disabled');

@@ -43,15 +43,12 @@ class User {
                 span('user-item__status', `${this.createStatusView()}`)
             )
         );
-        this.view.addListener('click', () => {
-            console.log('GOO Message', this.login);
-        });
+        this.view.addListener('click', () => {});
         return this.view;
     }
 
     logout() {
         this.isLogined = false;
-        console.log('logout');
         const payloadObj = {
             user: {
                 login: this.login,

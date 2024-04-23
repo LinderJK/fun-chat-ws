@@ -6,17 +6,20 @@ import { Message, ResponseData } from '../../types/response-type';
 import { getDataFromTimeStamp, scrollToBottom } from '../../utils/utils';
 
 class Communication {
-    sendTo;
+    userTo: string;
 
-    status: string;
+    userFrom: string;
+
+    statusUserTo: string;
 
     view;
 
     dialogContainer: IComponent | null = null;
 
-    constructor(login: string, status: boolean) {
-        this.sendTo = login;
-        this.status = status ? 'Online' : 'Offline';
+    constructor(userFrom: string, userTo: string, statusUserTo: boolean) {
+        this.userTo = userTo;
+        this.userFrom = userFrom;
+        this.statusUserTo = statusUserTo ? 'Online' : 'Offline';
         this.view = this.createView();
     }
 
@@ -26,7 +29,7 @@ class Communication {
             'dialog-view',
             div(
                 'dialog-info',
-                p('info-text', `${this.sendTo} is ${this.status}`)
+                p('info-text', `${this.userTo} is ${this.statusUserTo}`)
             ),
             this.dialogContainer
         );
@@ -34,19 +37,20 @@ class Communication {
 
     appendMessage(data: ResponseData) {
         if (data.type === 'MSG_SEND') {
-            if (data.payload.message.from !== this.sendTo) {
-                return;
-            }
+            console.log(data, data.payload.message.from, this.userTo);
+            // if (data.payload.message.from !== this.userTo) {
+            //     return;
+            // }
             this.createMessage(data.payload.message);
         }
     }
 
     createMessage(data: Message) {
-        // if (data.to !== this.sendTo) {
+        // if (data.from !== this.userTo) {
         //     return;
         // }
         let msgClass: string;
-        if (data.from === this.sendTo) {
+        if (data.from === this.userTo) {
             msgClass = 'message message--left';
         } else {
             msgClass = 'message message--right';
@@ -69,7 +73,6 @@ class Communication {
     }
 
     updateHistory(data: Message[]) {
-        console.log(data, 'MYY DATA!!!');
         if (data.length === 0) {
             this.dialogContainer?.append(
                 divText('', 'Its start dialog, go chatting')
@@ -79,12 +82,9 @@ class Communication {
         data.forEach((message) => {
             this.createMessage(message);
         });
-
-        console.log(data, 'update history');
         if (this.dialogContainer?.getElement()) {
             scrollToBottom(this.dialogContainer?.getElement());
         }
-        // const { messages } = data.payload;
     }
 
     getHistory() {
@@ -93,20 +93,19 @@ class Communication {
             type: 'MSG_FROM_USER',
             payload: {
                 user: {
-                    login: this.sendTo,
+                    login: this.userTo,
                 },
             },
         });
     }
 
     send(message: string) {
-        console.log(message);
         Network.send({
             id: null,
             type: 'MSG_SEND',
             payload: {
                 message: {
-                    to: this.sendTo,
+                    to: this.userTo,
                     text: message,
                 },
             },
