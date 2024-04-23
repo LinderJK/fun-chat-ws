@@ -77,10 +77,10 @@ class AppManager {
             this.chat?.chatInit();
         }
         if (data.type === 'MSG_SEND') {
-            this.chat?.communication?.appendMessage(data);
+            this.chat?.communication?.createMessage(data.payload.message);
         }
         if (data.type === 'MSG_FROM_USER') {
-            this.chat?.communication?.updateHistory(data);
+            this.chat?.communication?.updateHistory(data.payload.messages);
         }
     }
 

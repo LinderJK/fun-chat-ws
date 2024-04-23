@@ -75,12 +75,12 @@ class Chat {
             el.login.toLowerCase().includes(inputValue.toLowerCase())
         );
         if (filteredUsers.length > 0) {
-            this.renderFiteredUser(filteredUsers);
+            this.renderFilteredUser(filteredUsers);
             console.log(filteredUsers, 'FILTERED USERS!!!');
         }
     }
 
-    renderFiteredUser(users: User[]) {
+    renderFilteredUser(users: User[]) {
         this.usersSearchList?.deleteChildren();
         users.forEach((el) => {
             if (el.view) {
@@ -101,6 +101,9 @@ class Chat {
         // this.usersActiveList?.deleteChildren();
         // this.usersOfflineList?.deleteChildren();
         data.forEach((el) => {
+            if (el.login === this.user.login) {
+                return;
+            }
             const chatUser = new User(el);
             this.users?.push(chatUser);
             const viewUser = chatUser.render();

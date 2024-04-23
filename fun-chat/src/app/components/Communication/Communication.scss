@@ -1,5 +1,6 @@
 .dialog-info {
   border: 1px solid black;
+  background-color: bisque;
 }
 
 .dialog-container {
@@ -24,7 +25,7 @@
     word-wrap: break-word;
   }
 
-  &__text{
+  &__text {
     font-style: italic;
 
   }
@@ -42,7 +43,8 @@
   &--right {
     align-self: flex-end;
   }
-   &--left {
+
+  &--left {
     align-self: flex-start;
   }
 }

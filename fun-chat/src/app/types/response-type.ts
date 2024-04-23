@@ -44,7 +44,7 @@ type UserInactiveResponse = {
     };
 };
 
-type MessageSendResponse = {
+export type MessageSendResponse = {
     id: string;
     type: 'MSG_SEND';
     payload: {

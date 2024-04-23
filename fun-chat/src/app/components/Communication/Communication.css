@@ -1,10 +1,45 @@
 .dialog-info {
   border: 1px solid black;
+  background-color: bisque;
 }
 
 .dialog-container {
+  display: flex;
+  flex-direction: column;
   max-height: 500px;
   overflow-y: scroll;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  background-color: bisque;
+  padding: 5px;
+  border-radius: 15px;
+  max-width: 70%;
+  margin: 2px;
+}
+.message p {
+  margin: 2px;
+  word-wrap: break-word;
+}
+.message__text {
+  font-style: italic;
+}
+.message__time {
+  border-top: 1px solid chocolate;
+  font-size: 0.8rem;
+}
+.message__author {
+  border-bottom: 1px solid chocolate;
+  font-weight: bold;
+}
+.message--right {
+  align-self: flex-end;
+}
+.message--left {
+  align-self: flex-start;
 }
 
 /*# sourceMappingURL=Communication.css.map */

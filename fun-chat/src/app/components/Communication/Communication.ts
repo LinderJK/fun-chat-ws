@@ -2,8 +2,8 @@ import './Communication.scss';
 import { div, divText, p } from '../../page/components/BaseComponents';
 import Network from '../../services/Network';
 import { IComponent } from '../../types/components-types';
-import { Message, ResponseData } from '../../types/response-type';
-import { scrollToBottom, getDataFromTimeStamp } from '../../utils/utils';
+import { Message } from '../../types/response-type';
+import { getDataFromTimeStamp, scrollToBottom } from '../../utils/utils';
 
 class Communication {
     sendTo;
@@ -33,35 +33,35 @@ class Communication {
         return view;
     }
 
-    appendMessage(message: ResponseData) {
-        if (message.type === 'MSG_SEND') {
-            if (message.payload.message.to !== this.sendTo) {
-                return;
-            }
-            const view = div(
-                'message message--right',
-                p('message__author', `${message.payload.message.from}`),
-                p('message__text', `${message.payload.message.text}`),
-                p(
-                    'message__time',
-                    `${getDataFromTimeStamp(message.payload.message.datetime)}`
-                )
-            );
-            if (this.dialogContainer) {
-                this.dialogContainer.append(view);
-            }
-        }
-    }
+    // appendMessage(message: ResponseData) {
+    //     if (message.type === 'MSG_SEND') {
+    //         // if (message.payload.message.to !== this.sendTo) {
+    //         //     return;
+    //         // }
+    //         const view = div(
+    //             'message message--right',
+    //             p('message__author', `${message.payload.message.from}`),
+    //             p('message__text', `${message.payload.message.text}`),
+    //             p(
+    //                 'message__time',
+    //                 `${getDataFromTimeStamp(message.payload.message.datetime)}`
+    //             )
+    //         );
+    //         if (this.dialogContainer) {
+    //             this.dialogContainer.append(view);
+    //         }
+    //     }
+    // }
 
     createMessage(data: Message) {
-        let msgclass: string;
+        let msgClass: string;
         if (data.from === this.sendTo) {
-            msgclass = 'message message--left';
+            msgClass = 'message message--left';
         } else {
-            msgclass = 'message message--right';
+            msgClass = 'message message--right';
         }
         const view = div(
-            `${msgclass}`,
+            `${msgClass}`,
             p('message__author', `${data.from}`),
             p('message__text', `${data.text}`),
             p(
@@ -71,6 +71,9 @@ class Communication {
         );
         if (this.dialogContainer) {
             this.dialogContainer.append(view);
+        }
+        if (this.dialogContainer?.getElement()) {
+            scrollToBottom(this.dialogContainer?.getElement());
         }
     }
 
@@ -86,19 +89,18 @@ class Communication {
         });
     }
 
-    updateHistory(data: ResponseData) {
-        if (data.type === 'MSG_FROM_USER') {
-            const { messages } = data.payload;
-            if (messages.length === 0) {
-                this.dialogContainer?.append(
-                    divText('', 'Its start dialog, go chatting')
-                );
-                return;
-            }
-            messages.forEach((message) => {
-                this.createMessage(message);
-            });
+    updateHistory(data: Message[]) {
+        console.log(data, 'MYY DATA!!!');
+        if (data.length === 0) {
+            this.dialogContainer?.append(
+                divText('', 'Its start dialog, go chatting')
+            );
+            return;
         }
+        data.forEach((message) => {
+            this.createMessage(message);
+        });
+
         console.log(data, 'update history');
         if (this.dialogContainer?.getElement()) {
             scrollToBottom(this.dialogContainer?.getElement());
