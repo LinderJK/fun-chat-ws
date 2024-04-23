@@ -27,6 +27,13 @@
   width: 100%;
 }
 
+.input-user-search {
+  width: 100%;
+}
+.input-user-search::placeholder {
+  font-size: 0.8rem;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }

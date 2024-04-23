@@ -35,10 +35,19 @@
 .message-field {
 
 }
-.input-message-container{
+
+.input-message-container {
 
   & input {
     width: 100%;
+  }
+}
+
+.input-user-search {
+  width: 100%;
+
+  &::placeholder {
+    font-size: 0.8rem;
   }
 }
 

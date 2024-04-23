@@ -177,7 +177,12 @@ class Chat {
         this.btnSend = button('send-message', 'Send', () => {});
         this.inputMessage = input('input-message', 'text', 'Write message', '');
 
-        this.searchUserInput = input('123', 'text', 'Search', '');
+        this.searchUserInput = input(
+            'input-user-search',
+            'text',
+            'Search User',
+            ''
+        );
 
         const content = div(
             'container chat-container',
