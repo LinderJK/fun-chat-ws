@@ -17,12 +17,25 @@
   padding: 5px;
   border-radius: 15px;
   max-width: 70%;
+  margin: 2px;
 
   & p {
     margin: 2px;
+    word-wrap: break-word;
+  }
+
+  &__text{
+
   }
 
   &__author {
     font-weight: bold;
+  }
+
+  &--right {
+    align-self: flex-end;
+  }
+   &--left {
+    align-self: flex-start;
   }
 }

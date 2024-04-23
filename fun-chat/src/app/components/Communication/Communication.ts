@@ -3,6 +3,7 @@ import { div, p } from '../../page/components/BaseComponents';
 import Network from '../../services/Network';
 import { IComponent } from '../../types/components-types';
 import { Message, ResponseData } from '../../types/response-type';
+import scrollToBottom from '../../utils/utils';
 
 class Communication {
     sendTo;
@@ -34,11 +35,11 @@ class Communication {
 
     appendMessage(message: ResponseData) {
         if (message.type === 'MSG_SEND') {
-            if (message.payload.message.to != this.sendTo) {
+            if (message.payload.message.to !== this.sendTo) {
                 return;
             }
             const view = div(
-                'message',
+                'message message--right',
                 p('message__author', `${message.payload.message.from}`),
                 p('message__text', `${message.payload.message.text}`)
             );
@@ -49,8 +50,14 @@ class Communication {
     }
 
     createMessage(data: Message) {
+        let msgclass: string;
+        if (data.from === this.sendTo) {
+            msgclass = 'message message--left';
+        } else {
+            msgclass = 'message message--right';
+        }
         const view = div(
-            'message',
+            `${msgclass}`,
             p('message__author', `${data.from}`),
             p('message__text', `${data.text}`)
         );
@@ -79,6 +86,9 @@ class Communication {
             });
         }
         console.log(data, 'update history');
+        if (this.dialogContainer?.getElement()) {
+            scrollToBottom(this.dialogContainer?.getElement());
+        }
         // const { messages } = data.payload;
     }
 
