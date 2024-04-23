@@ -58,6 +58,10 @@ class Chat {
         });
     }
 
+    findUser(userLogin: string) {
+        return this.users?.find((el) => el.login === userLogin);
+    }
+
     searchUser(e: Event) {
         const inputField = e.target as HTMLInputElement;
         const inputValue = inputField.value;

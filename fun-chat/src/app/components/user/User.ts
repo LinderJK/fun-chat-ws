@@ -17,6 +17,8 @@ class User {
 
     private readonly password: string = '';
 
+    unreadMessageCount: number = 0;
+
     constructor(data: UserData, password: string = '') {
         this.privatelogin = data.login;
         this.privateName = data.login;
@@ -41,6 +43,10 @@ class User {
                 'pb-3 mb-0 small lh-sm w-100',
                 p('user-item__name', `${this.privateName}`),
                 span('user-item__status', `${this.createStatusView()}`)
+            ),
+            span(
+                'mx-2 unread-count',
+                `${this.unreadMessageCount === 0 ? `` : `${this.unreadMessageCount}`} `
             )
         );
         this.view.addListener('click', () => {});
@@ -80,6 +86,10 @@ class User {
 
     randomColor(): string {
         return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    }
+
+    increaseUnreadMessageCount() {
+        this.unreadMessageCount += 1;
     }
 }
 

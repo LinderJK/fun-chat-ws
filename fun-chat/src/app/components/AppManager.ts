@@ -94,6 +94,12 @@ class AppManager {
                         this.chat?.user.status
                     );
                     com.createMessage(data.payload.message);
+
+                    const user = this.chat?.findUser(data.payload.message.from);
+                    if (user) {
+                        console.log(user);
+                        user.increaseUnreadMessageCount();
+                    }
                     return;
                 }
             }
