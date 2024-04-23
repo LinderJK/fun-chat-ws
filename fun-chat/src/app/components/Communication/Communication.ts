@@ -37,7 +37,6 @@ class Communication {
 
     appendMessage(data: ResponseData) {
         if (data.type === 'MSG_SEND') {
-            console.log(data, data.payload.message.from, this.userTo);
             // if (data.payload.message.from !== this.userTo) {
             //     return;
             // }

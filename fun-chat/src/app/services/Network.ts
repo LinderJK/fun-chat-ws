@@ -26,14 +26,12 @@ class Network {
 
     static subscribe() {
         this.socket.onopen = () => {
-            console.log('WebSocket connected');
             Network.isConnected = true;
             // if (this.onOpenCallback) {
             //     this.onOpenCallback();
             // }
         };
-        this.socket.onmessage = (event) => {
-            console.log('Message received:', event.data);
+        this.socket.onmessage = () => {
             // const data = JSON.parse(event.data);
             // this.handleMessage(data);
         };
@@ -42,8 +40,7 @@ class Network {
             console.error('WebSocket error:', error);
         };
 
-        this.socket.onclose = (event) => {
-            console.log('WebSocket closed:', event);
+        this.socket.onclose = () => {
             Network.isConnected = false;
         };
     }
@@ -83,7 +80,6 @@ class Network {
                 user,
             },
         };
-        console.log('send user', user);
         if (Network.socket.readyState === WebSocket.OPEN) {
             Network.socket.send(JSON.stringify(request));
         }

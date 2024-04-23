@@ -65,24 +65,22 @@ class Chat {
     searchUser(e: Event) {
         const inputField = e.target as HTMLInputElement;
         const inputValue = inputField.value;
-        if (
-            this.users?.length === 0 ||
-            !this.users ||
-            inputValue.length === 0
-        ) {
-            this.usersSearchList?.deleteChildren();
+        const usersCopy = this.users ? [...this.users] : [];
+        if (usersCopy.length === 0 || inputValue.length === 0) {
             return;
         }
-        const filteredUsers = this.users.filter((el) =>
-            el.login.toLowerCase().includes(inputValue.toLowerCase())
-        );
+        const filteredUsers = usersCopy
+            .slice()
+            .filter((el) =>
+                el.login.toLowerCase().includes(inputValue.toLowerCase())
+            );
         if (filteredUsers.length > 0) {
+            this.usersSearchList?.deleteChildren();
             this.renderFilteredUser(filteredUsers);
         }
     }
 
     renderFilteredUser(users: User[]) {
-        this.usersSearchList?.deleteChildren();
         users.forEach((el) => {
             if (el.view) {
                 this.usersSearchList!.append(el.view);

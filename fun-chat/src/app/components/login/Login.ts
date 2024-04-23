@@ -33,7 +33,6 @@ class Login {
 
     login() {
         const valid = this.isValid();
-        console.log(valid, 'this valid?');
         if (valid) {
             const inputData = this.collectInputData() as UserLoginData;
             sessionStorage.setItem('user', JSON.stringify(inputData));
@@ -41,7 +40,7 @@ class Login {
                 this.callback();
             }
         } else {
-            console.log('failed login');
+            console.error('failed login');
         }
         return false;
     }
@@ -52,7 +51,6 @@ class Login {
 
     getSessionUser() {
         const user = sessionStorage.getItem('user');
-        console.log(user, 'user from session');
         if (user) {
             return JSON.parse(user) as UserLoginData;
         }

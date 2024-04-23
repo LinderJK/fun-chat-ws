@@ -76,7 +76,6 @@ class AppManager {
             this.chat?.chatInit();
         }
         if (data.type === 'MSG_SEND') {
-            console.log(data.payload);
             if (
                 data.payload.message.from !==
                     this.chat?.communication?.userFrom &&
@@ -97,7 +96,6 @@ class AppManager {
 
                     const user = this.chat?.findUser(data.payload.message.from);
                     if (user) {
-                        console.log(user);
                         user.increaseUnreadMessageCount();
                     }
                     return;
