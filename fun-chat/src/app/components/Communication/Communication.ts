@@ -34,9 +34,13 @@ class Communication {
 
     appendMessage(message: ResponseData) {
         if (message.type === 'MSG_SEND') {
+            if (message.payload.message.to != this.sendTo) {
+                return;
+            }
             const view = div(
                 'message',
-                p('message-text', `${message.payload.message.text}`)
+                p('message__author', `${message.payload.message.from}`),
+                p('message__text', `${message.payload.message.text}`)
             );
             if (this.dialogContainer) {
                 this.dialogContainer.append(view);
@@ -45,7 +49,11 @@ class Communication {
     }
 
     createMessage(data: Message) {
-        const view = div('message', p('message-text', `${data.text}`));
+        const view = div(
+            'message',
+            p('message__author', `${data.from}`),
+            p('message__text', `${data.text}`)
+        );
         if (this.dialogContainer) {
             this.dialogContainer.append(view);
         }

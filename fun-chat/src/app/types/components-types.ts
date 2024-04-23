@@ -45,6 +45,8 @@ export interface IInput extends IComponent {
     get value(): string;
 
     get id(): string;
+
+    deleteValue(): void;
 }
 
 export type ComponentMap = Map<string, IComponent> | undefined;

@@ -31,6 +31,11 @@ class Input extends Component {
         const inputElement = this.getElement() as HTMLInputElement;
         return inputElement.id;
     }
+
+    deleteValue() {
+        const inputElement = this.getElement() as HTMLInputElement;
+        inputElement.value = '';
+    }
 }
 
 export default Input;
