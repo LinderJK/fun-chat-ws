@@ -3,7 +3,7 @@ import { div, p } from '../../page/components/BaseComponents';
 import Network from '../../services/Network';
 import { IComponent } from '../../types/components-types';
 import { Message, ResponseData } from '../../types/response-type';
-import { scrollToBottom, getDataFromTimeStemp } from '../../utils/utils';
+import { scrollToBottom, getDataFromTimeStamp } from '../../utils/utils';
 
 class Communication {
     sendTo;
@@ -44,7 +44,7 @@ class Communication {
                 p('message__text', `${message.payload.message.text}`),
                 p(
                     'message__time',
-                    `${getDataFromTimeStemp(message.payload.message.datetime)}`
+                    `${getDataFromTimeStamp(message.payload.message.datetime)}`
                 )
             );
             if (this.dialogContainer) {
@@ -64,7 +64,7 @@ class Communication {
             `${msgclass}`,
             p('message__author', `${data.from}`),
             p('message__text', `${data.text}`),
-            p('message__time', `${getDataFromTimeStemp(data.datetime)}`)
+            p('message__time', `${getDataFromTimeStamp(data.datetime)}`)
         );
         if (this.dialogContainer) {
             this.dialogContainer.append(view);

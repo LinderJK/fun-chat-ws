@@ -5,11 +5,12 @@ export function scrollToBottom(element: HTMLElement) {
     });
 }
 
-export function getDataFromTimeStemp(timestamp: number) {
-    const sec = timestamp / 1000;
-    const date = new Date(sec);
+export function getDataFromTimeStamp(timestamp: number) {
+    const date = new Date(timestamp);
+    // const year = date.getFullYear();
+    // const month = date.getMonth()
+    // const day = date.getDate();
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-    return `${hours}:${minutes}:${seconds}`;
+    return `${hours}:${minutes}`;
 }
