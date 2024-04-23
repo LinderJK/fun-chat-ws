@@ -88,17 +88,24 @@ class Chat {
         this.chatField?.append(this.communication.view);
         this.btnSend?.deleteAttribute('disabled');
         this.btnSend?.addListener('click', () => {
-            if (this.communication) {
-                this.communication.send(this.getInputText());
-            }
-            this.inputMessage?.deleteValue();
-            if (this.communication?.dialogContainer?.getElement()) {
-                scrollToBottom(
-                    this.communication?.dialogContainer?.getElement()
-                );
+            this.sendMessage();
+        });
+        this.inputMessage?.addListener('keydown', (event) => {
+            if ((event as KeyboardEvent).key === 'Enter') {
+                this.sendMessage();
             }
         });
         this.communication.getHistory();
+    }
+
+    sendMessage() {
+        if (this.communication) {
+            this.communication.send(this.getInputText());
+        }
+        this.inputMessage?.deleteValue();
+        if (this.communication?.dialogContainer?.getElement()) {
+            scrollToBottom(this.communication?.dialogContainer?.getElement());
+        }
     }
 
     getInputText() {

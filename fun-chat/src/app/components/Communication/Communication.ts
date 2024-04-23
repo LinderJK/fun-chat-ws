@@ -64,7 +64,10 @@ class Communication {
             `${msgclass}`,
             p('message__author', `${data.from}`),
             p('message__text', `${data.text}`),
-            p('message__time', `${getDataFromTimeStamp(data.datetime)}`)
+            p(
+                'message__time text-body-secondary',
+                `${getDataFromTimeStamp(data.datetime)}`
+            )
         );
         if (this.dialogContainer) {
             this.dialogContainer.append(view);

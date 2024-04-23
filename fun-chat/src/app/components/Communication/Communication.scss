@@ -25,10 +25,17 @@
   }
 
   &__text{
+    font-style: italic;
 
   }
 
+  &__time {
+    border-top: 1px solid chocolate;
+    font-size: 0.8rem;
+  }
+
   &__author {
+    border-bottom: 1px solid chocolate;
     font-weight: bold;
   }
 
