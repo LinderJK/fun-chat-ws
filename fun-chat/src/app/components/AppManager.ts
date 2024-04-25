@@ -106,6 +106,13 @@ class AppManager {
         if (data.type === 'MSG_FROM_USER') {
             this.chat?.communication?.updateHistory(data.payload.messages);
         }
+        if (data.type === 'ERROR') {
+            console.log(data.payload);
+            if (this.login) {
+                this.login.addErrorMessage(data.payload.error);
+                this.login.logout();
+            }
+        }
     }
 
     startChat(user: UserData) {

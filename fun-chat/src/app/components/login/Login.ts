@@ -22,6 +22,7 @@ class Login {
     // inputsFirstName: IComponent | undefined = undefined;
     //
     // inputLastName: IComponent | undefined = undefined;
+    errorMessage: IComponent | undefined = undefined;
 
     callback: CallbackFn | null = null;
 
@@ -47,6 +48,12 @@ class Login {
 
     logout() {
         sessionStorage.clear();
+    }
+
+    addErrorMessage(message: string) {
+        const error = span('error', `${message.toUpperCase()}`);
+        this.errorMessage?.deleteChildren();
+        this.errorMessage?.append(error);
     }
 
     getSessionUser() {
@@ -122,6 +129,8 @@ class Login {
         );
         const inputLoginHint = span('form-text', '\u3164');
 
+        this.errorMessage = div('error-message');
+
         const inputPassword = input(
             'form-control input-password',
             'password',
@@ -140,7 +149,7 @@ class Login {
                 'login-content',
                 h1('login-content__title', 'Welcome to FUN-CHAT'),
                 p('login-content__description', 'Please login'),
-
+                this.errorMessage,
                 div(
                     'form mb-3 align-items-center',
                     div(
@@ -164,6 +173,7 @@ class Login {
                     ),
                     inputPasswordHint
                 ),
+
                 this.loginBtn
             )
         );
