@@ -16,9 +16,9 @@ class Network {
 
     static onMessageCallback: CallbackDataFn | null = null;
 
-    constructor() {
-        Network.subscribe();
-    }
+    // constructor() {
+    //     Network.subscribe();
+    // }
 
     // setOnOpenCallback(callback: CallbackFn) {
     //     Network.onOpenCallback = callback;
@@ -45,6 +45,22 @@ class Network {
         };
     }
 
+    static tryReconnect(callback: CallbackFn, newListener: CallbackFn) {
+        const reconnect = setInterval(() => {
+            Network.socket = new WebSocket('ws://localhost:4000');
+            Network.socket.onopen = () => {
+                setTimeout(() => {
+                    newListener();
+                    callback();
+                }, 5000);
+                clearInterval(reconnect);
+            };
+            // if (Network.socket.readyState === WebSocket.OPEN) {
+            //     callback();
+            //     clearInterval(reconnect);
+            // }
+        }, 5000);
+    }
     // static handleMessage(data: ResponseData) {
     //     if (Network.onMessageCallback) {
     //         Network.onMessageCallback(data);
@@ -72,7 +88,7 @@ class Network {
 
     // generateRequest() {}
 
-    userAuth(user: UserLoginData) {
+    static userAuth(user: UserLoginData) {
         const request = {
             id: Network.generateUniqueId(),
             type: 'USER_LOGIN',

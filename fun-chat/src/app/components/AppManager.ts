@@ -5,6 +5,7 @@ import { UserData } from '../types/response-type';
 import Communication from './Communication/Communication';
 import aboutPageView from '../page/about/about-page-view';
 import { PageView } from '../types/components-types';
+import reconnectPageView from '../page/reconnect/reconnect-page-view';
 
 class AppManager {
     root: HTMLElement | null = document.querySelector('#root'); // The root HTML element.
@@ -14,16 +15,19 @@ class AppManager {
 
     login;
 
-    network;
+    // network;
 
     chat: Chat | undefined = undefined;
 
     aboutView: PageView | undefined = undefined;
 
+    reconnectView: PageView | undefined = undefined;
+
     constructor() {
         // this.router = new Router();
-        this.network = new Network();
+        // this.network = Network();
         this.login = new Login(this.startLogin.bind(this));
+        this.reconnectView = reconnectPageView();
         this.listenSocket();
         this.aboutView = aboutPageView(() => {
             if (this.chat?.user && this.chat.user.isLogined) {
@@ -62,7 +66,7 @@ class AppManager {
             // this.network.setOnOpenCallback(() => {
             //     this.network.userAuth(user);
             // });
-            this.network.userAuth(user);
+            Network.userAuth(user);
             // this.startChat({ login: user.login, isLogined: true });
         } else {
             this.render(this.login.view);
@@ -76,11 +80,24 @@ class AppManager {
         };
 
         Network.socket.onopen = () => {
+            console.log('WORK OPEN RECONNECT');
             this.startLogin();
+        };
+
+        Network.socket.onclose = () => {
+            const viewReconnect = this.reconnectView?.element.getElement();
+            if (viewReconnect) {
+                this.render(viewReconnect);
+                Network.tryReconnect(
+                    this.startLogin.bind(this),
+                    this.listenSocket.bind(this)
+                );
+            }
         };
     }
 
     messageHandler(event: MessageEvent) {
+        console.log('WORK LOGGER', event.data);
         const data = JSON.parse(event.data);
         if (data.type === 'USER_LOGIN') {
             this.startChat(data.payload.user);
