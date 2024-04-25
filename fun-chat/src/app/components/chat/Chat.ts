@@ -34,6 +34,8 @@ class Chat {
 
     inputMessage: IInput | undefined = undefined;
 
+    aboutBtn: IComponent | undefined = undefined;
+
     isLoggedIn: boolean = false;
 
     chatField: IComponent | undefined = undefined;
@@ -158,7 +160,7 @@ class Chat {
         const btnLogout = button('chat-logout', 'Logout', () => {
             this.user.logout();
         });
-        const btnInfo = button('chat-info', 'Information', () => {});
+        this.aboutBtn = button('about-chat', 'About', () => {});
         this.usersActiveList = div('users-active-field');
         this.usersSearchList = div('users-search-field');
         this.usersOfflineList = div('users-offline-field');
@@ -182,7 +184,7 @@ class Chat {
                 'nav chat-nav',
                 p('user-name', `${this.user.login}`),
                 p('app-name', `Fun-chat`),
-                div('btn-chat-nav', btnLogout, btnInfo)
+                div('btn-chat-nav', btnLogout, this.aboutBtn)
             ),
             div(
                 'chat-fields',

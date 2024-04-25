@@ -3,6 +3,8 @@ import Network from '../services/Network';
 import Chat from './chat/Chat';
 import { UserData } from '../types/response-type';
 import Communication from './Communication/Communication';
+import aboutPageView from '../page/about/about-page-view';
+import { PageView } from '../types/components-types';
 
 class AppManager {
     root: HTMLElement | null = document.querySelector('#root'); // The root HTML element.
@@ -16,11 +18,35 @@ class AppManager {
 
     chat: Chat | undefined = undefined;
 
+    aboutView: PageView | undefined = undefined;
+
     constructor() {
         // this.router = new Router();
         this.network = new Network();
         this.login = new Login(this.startLogin.bind(this));
         this.listenSocket();
+        this.aboutView = aboutPageView(() => {
+            if (this.chat?.user && this.chat.user.isLogined) {
+                this.render(this.chat.view);
+            } else if (!this.chat?.user.isLogined) {
+                console.log(this.login.isLogin);
+                this.render(this.login.view);
+            }
+        });
+        this.addButtonListeners();
+    }
+
+    addButtonListeners() {
+        console.log('work about');
+        const viewAbout = this.aboutView?.element.getElement();
+        if (viewAbout) {
+            this.login.aboutBtn?.addListener('click', () =>
+                this.render(viewAbout)
+            );
+            this.chat?.aboutBtn?.addListener('click', () =>
+                this.render(viewAbout)
+            );
+        }
     }
 
     public start(): void {
@@ -120,6 +146,7 @@ class AppManager {
         if (pass) {
             this.chat = new Chat(user, pass);
             this.render(this.chat.view);
+            this.addButtonListeners();
         }
     }
 

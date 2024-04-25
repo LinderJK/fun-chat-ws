@@ -17,6 +17,8 @@ class Login {
 
     loginBtn: IComponent | undefined = undefined;
 
+    aboutBtn: IComponent | undefined = undefined;
+
     inputs: { input: IInput; hint: IComponent }[] = [];
 
     // inputsFirstName: IComponent | undefined = undefined;
@@ -37,6 +39,7 @@ class Login {
         if (valid) {
             const inputData = this.collectInputData() as UserLoginData;
             sessionStorage.setItem('user', JSON.stringify(inputData));
+            this.isLogin = true;
             if (this.callback) {
                 this.callback();
             }
@@ -48,6 +51,7 @@ class Login {
 
     logout() {
         sessionStorage.clear();
+        this.isLogin = false;
     }
 
     addErrorMessage(message: string) {
@@ -117,6 +121,9 @@ class Login {
         this.loginBtn = button('btn btn-primary btn-login', 'Login', () => {
             this.login();
         });
+        this.aboutBtn = button('btn btn-primary btn-about', 'About', () => {
+            // this.login();
+        });
         this.loginBtn.addListener('submit', (e) => {
             e.preventDefault();
             this.login();
@@ -149,6 +156,7 @@ class Login {
                 'login-content',
                 h1('login-content__title', 'Welcome to FUN-CHAT'),
                 p('login-content__description', 'Please login'),
+
                 this.errorMessage,
                 div(
                     'form mb-3 align-items-center',
@@ -173,8 +181,8 @@ class Login {
                     ),
                     inputPasswordHint
                 ),
-
-                this.loginBtn
+                this.loginBtn,
+                this.aboutBtn
             )
         );
         content.addListener('keydown', (event) => {
