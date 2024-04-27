@@ -1,7 +1,8 @@
 import Button from './button/button';
 import Component from './Component';
-import { HandlerFn, IComponent } from '../../types/components-types';
+import { IComponent } from '../../types/components-types';
 import Input from './input/input';
+import { HandlerFn } from '../../types/other-types';
 
 export const div = (className: string, ...children: IComponent[]) =>
     new Component(
@@ -123,50 +124,3 @@ export const table = (className: string, ...children: IComponent[]) =>
         },
         ...children
     );
-
-// export const thead = (...children: IComponent[]) =>
-//     new Component(
-//         {
-//             tagName: 'thead',
-//         },
-//         ...children
-//     );
-//
-// export const tbody = (...children: IComponent[]) =>
-//     new Component(
-//         {
-//             tagName: 'tbody',
-//         },
-//         ...children
-//     );
-//
-// export const tr = (className: string, ...children: IComponent[]) =>
-//     new Component(
-//         {
-//             tagName: 'tr',
-//             className,
-//         },
-//         ...children
-//     );
-//
-// export const th = (className: string, textContent: string, scope: string) =>
-//     new Component({
-//         tagName: 'th',
-//         attributes: { scope },
-//         className,
-//         textContent,
-//     });
-//
-// export const td = (
-//     className: string,
-//     textContent: string,
-//     ...children: IComponent[]
-// ) =>
-//     new Component(
-//         {
-//             tagName: 'td',
-//             className,
-//             textContent,
-//         },
-//         ...children
-//     );

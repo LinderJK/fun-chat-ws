@@ -16,7 +16,7 @@ export interface IComponent {
 
     deleteAttribute(attribute: string): void;
 
-    getTextContent(): string;
+    getTextContent(): string | null;
 
     getAllChildrenMap(): Map<string, IComponent>;
 
@@ -55,4 +55,3 @@ export type PageView = {
     element: IComponent;
     map: ComponentMap;
 };
-export type HandlerFn = (evt: Event) => void;

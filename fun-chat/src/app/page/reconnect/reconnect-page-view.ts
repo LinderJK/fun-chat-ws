@@ -1,4 +1,3 @@
-import './reconnect-page.scss';
 import { div, h1, p } from '../components/BaseComponents';
 
 const reconnectPageView = () => {

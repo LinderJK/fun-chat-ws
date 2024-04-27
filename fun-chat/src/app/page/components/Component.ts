@@ -41,12 +41,12 @@ class Component implements IComponent {
         this.elem.textContent = textContent;
     }
 
-    getTextContent(): string {
+    getTextContent(): string | null {
         if (this.elem.textContent) {
             return this.elem.textContent;
         }
         console.error('no text content');
-        return '';
+        return null;
     }
 
     deleteAttribute(attribute: string): void {

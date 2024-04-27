@@ -1,50 +1,21 @@
-import {
-    CallbackDataFn,
-    CallbackFn,
-    UserLoginData,
-} from '../types/other-types';
-import { ServerRequest } from '../types/response-type';
+import { CallbackFn } from '../types/other-types';
+import { ServerRequest, UserLoginData } from '../types/response-type';
 
+/**
+ * Handles network communication with the server using WebSocket.
+ */
 class Network {
+    /**
+     * The WebSocket instance for communication with the server.
+     */
     static socket = new WebSocket('ws://localhost:4000');
 
-    static message = null;
-
-    static isConnected = false;
-
-    static onOpenCallback: CallbackFn | null = null;
-
-    static onMessageCallback: CallbackDataFn | null = null;
-
-    // constructor() {
-    //     Network.subscribe();
-    // }
-
-    // setOnOpenCallback(callback: CallbackFn) {
-    //     Network.onOpenCallback = callback;
-    // }
-
-    static subscribe() {
-        this.socket.onopen = () => {
-            Network.isConnected = true;
-            // if (this.onOpenCallback) {
-            //     this.onOpenCallback();
-            // }
-        };
-        this.socket.onmessage = () => {
-            // const data = JSON.parse(event.data);
-            // this.handleMessage(data);
-        };
-
-        this.socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
-
-        this.socket.onclose = () => {
-            Network.isConnected = false;
-        };
-    }
-
+    /**
+     * Attempts to reconnect to the server.
+     * @param {CallbackFn} callback - The callback function to execute after successful reconnection.
+     * @param {CallbackFn} newListener - The callback function to set new listeners after reconnection.
+     * @static
+     */
     static tryReconnect(callback: CallbackFn, newListener: CallbackFn) {
         const reconnect = setInterval(() => {
             Network.socket = new WebSocket('ws://localhost:4000');
@@ -55,39 +26,14 @@ class Network {
                 }, 5000);
                 clearInterval(reconnect);
             };
-            // if (Network.socket.readyState === WebSocket.OPEN) {
-            //     callback();
-            //     clearInterval(reconnect);
-            // }
         }, 5000);
     }
-    // static handleMessage(data: ResponseData) {
-    //     if (Network.onMessageCallback) {
-    //         Network.onMessageCallback(data);
-    //     }
-    // }
 
-    // get userLogin() {
-    //     if (Network.message) {
-    //         const data = JSON.parse(Network.message);
-    //         console.log(data);
-    //         if (data.type === 'USER_LOGIN') {
-    //             return data;
-    //         }
-    //     }
-    //     return null;
-    // }
-
-    // static updateData(data: Event) {
-    //     const data = JSON.parse(data);
-    //     switch (data.type) {
-    //       case 'USER_LOGIN':
-    //         Network.
-    //     }
-    // }
-
-    // generateRequest() {}
-
+    /**
+     * Sends a user authentication request to the server.
+     * @param {UserLoginData} user - The user login data for authentication.
+     * @static
+     */
     static userAuth(user: UserLoginData) {
         const request = {
             id: Network.generateUniqueId(),
@@ -101,12 +47,22 @@ class Network {
         }
     }
 
+    /**
+     * Sends a generic server request to the server.
+     * @param {ServerRequest<T>} req - The server request to send.
+     * @static
+     */
     static send<T>(req: ServerRequest<T>) {
         if (Network.socket.readyState === WebSocket.OPEN) {
             Network.socket.send(JSON.stringify(req));
         }
     }
 
+    /**
+     * Generates a unique ID for user Auth.
+     * @returns {string} The unique ID.
+     * @static
+     */
     static generateUniqueId() {
         return 'unique_id';
     }

@@ -1,4 +1,3 @@
-import './input.scss';
 import Component from '../Component';
 
 interface IInputConstructor {

@@ -6,14 +6,34 @@ import { Message, ResponseData } from '../../types/response-type';
 import { getDataFromTimeStamp, scrollToBottom } from '../../utils/utils';
 
 class Communication {
+    /**
+     * The username of the recipient user.
+     * @type {string}
+     */
     userTo: string;
 
+    /**
+     * The username of the sender user.
+     * @type {string}
+     */
     userFrom: string;
 
+    /**
+     * The status of the recipient user.
+     * @type {string}
+     */
     statusUserTo: string;
 
+    /**
+     * The view element representing the communication dialog.
+     * @type {IComponent}
+     */
     view;
 
+    /**
+     * The container element for displaying dialog messages.
+     * @type {IComponent | null}
+     */
     dialogContainer: IComponent | null = null;
 
     constructor(userFrom: string, userTo: string, statusUserTo: boolean) {
@@ -23,7 +43,11 @@ class Communication {
         this.view = this.createView();
     }
 
-    createView() {
+    /**
+     * Creates the view element for the communication dialog.
+     * @returns {IComponent} The view element.
+     */
+    createView(): IComponent {
         this.dialogContainer = div('dialog-container');
         return div(
             'dialog-view',
@@ -35,19 +59,21 @@ class Communication {
         );
     }
 
+    /**
+     * Appends a message to the communication dialog.
+     * @param {ResponseData} data The message data.
+     */
     appendMessage(data: ResponseData) {
         if (data.type === 'MSG_SEND') {
-            // if (data.payload.message.from !== this.userTo) {
-            //     return;
-            // }
             this.createMessage(data.payload.message);
         }
     }
 
+    /**
+     * Creates a message element and appends it to the dialog.
+     * @param {Message} data The message data.
+     */
     createMessage(data: Message) {
-        // if (data.from !== this.userTo) {
-        //     return;
-        // }
         let msgClass: string;
         if (data.from === this.userTo) {
             msgClass = 'message message--left';
@@ -71,6 +97,10 @@ class Communication {
         }
     }
 
+    /**
+     * Updates the communication dialog with message history.
+     * @param {Message[]} data The message history data.
+     */
     updateHistory(data: Message[]) {
         if (data.length === 0) {
             this.dialogContainer?.append(
@@ -86,6 +116,9 @@ class Communication {
         }
     }
 
+    /**
+     * Retrieves the message history from the server.
+     */
     getHistory() {
         Network.send({
             id: '',
@@ -98,6 +131,10 @@ class Communication {
         });
     }
 
+    /**
+     * Sends a message to the recipient user.
+     * @param {string} message The message to send.
+     */
     send(message: string) {
         Network.send({
             id: null,

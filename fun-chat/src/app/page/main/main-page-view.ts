@@ -1,4 +1,3 @@
-import './main-page.scss';
 import { div } from '../components/BaseComponents';
 
 const mainPageView = () => {

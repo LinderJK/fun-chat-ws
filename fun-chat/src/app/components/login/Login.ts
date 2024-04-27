@@ -8,7 +8,8 @@ import {
     span,
 } from '../../page/components/BaseComponents';
 import { IComponent, IInput } from '../../types/components-types';
-import { CallbackFn, UserLoginData } from '../../types/other-types';
+import { CallbackFn } from '../../types/other-types';
+import { UserLoginData } from '../../types/response-type';
 
 class Login {
     view: HTMLElement;
@@ -21,9 +22,6 @@ class Login {
 
     inputs: { input: IInput; hint: IComponent }[] = [];
 
-    // inputsFirstName: IComponent | undefined = undefined;
-    //
-    // inputLastName: IComponent | undefined = undefined;
     errorMessage: IComponent | undefined = undefined;
 
     callback: CallbackFn | null = null;

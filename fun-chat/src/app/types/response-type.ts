@@ -6,6 +6,8 @@ export type ResponseData =
     | MessageSendResponse
     | MsgFromUserResponse;
 
+export type UserLoginData = { login: string; password: string };
+
 type UserLoginResponse = {
     id: string;
     type: 'USER_LOGIN';

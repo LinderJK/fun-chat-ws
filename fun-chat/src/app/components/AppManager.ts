@@ -8,24 +8,32 @@ import { PageView } from '../types/components-types';
 import reconnectPageView from '../page/reconnect/reconnect-page-view';
 
 class AppManager {
+    /**
+     * The root HTML element where the application is rendered.
+     */
     root: HTMLElement | null = document.querySelector('#root'); // The root HTML element.
 
-    // router;
-    // user: User | undefined = undefined;
+    /**
+     * The login component instance.
+     */
+    login: Login;
 
-    login;
-
-    // network;
-
+    /**
+     * The chat component instance.
+     */
     chat: Chat | undefined = undefined;
 
+    /**
+     * The about page view.
+     */
     aboutView: PageView | undefined = undefined;
 
+    /**
+     * The reconnect page view.
+     */
     reconnectView: PageView | undefined = undefined;
 
     constructor() {
-        // this.router = new Router();
-        // this.network = Network();
         this.login = new Login(this.startLogin.bind(this));
         this.reconnectView = reconnectPageView();
         this.listenSocket();
@@ -33,15 +41,14 @@ class AppManager {
             if (this.chat?.user && this.chat.user.isLogined) {
                 this.render(this.chat.view);
             } else if (!this.chat?.user.isLogined) {
-                console.log(this.login.isLogin);
                 this.render(this.login.view);
             }
         });
         this.addButtonListeners();
     }
 
+    // Initialize components event listeners
     addButtonListeners() {
-        console.log('work about');
         const viewAbout = this.aboutView?.element.getElement();
         if (viewAbout) {
             this.login.aboutBtn?.addListener('click', () =>
@@ -53,6 +60,9 @@ class AppManager {
         }
     }
 
+    /**
+     * Initializes the application.
+     */
     public start(): void {
         if (!this.root) {
             console.error('dont find root');
@@ -60,27 +70,27 @@ class AppManager {
         this.startLogin();
     }
 
+    /**
+     * Initiates the login process.
+     */
     startLogin(): void {
         const user = this.login.getSessionUser();
         if (user) {
-            // this.network.setOnOpenCallback(() => {
-            //     this.network.userAuth(user);
-            // });
             Network.userAuth(user);
-            // this.startChat({ login: user.login, isLogined: true });
         } else {
             this.render(this.login.view);
         }
     }
 
+    /**
+     * Listens for socket events.
+     */
     listenSocket() {
         Network.socket.onmessage = (event) => {
-            // console.log('WORK LOGGER', event.data);
             this.messageHandler(event);
         };
 
         Network.socket.onopen = () => {
-            console.log('WORK OPEN RECONNECT');
             this.startLogin();
         };
 
@@ -96,8 +106,11 @@ class AppManager {
         };
     }
 
+    /**
+     * Handles incoming socket messages.
+     * @param {MessageEvent} event - The socket message event.
+     */
     messageHandler(event: MessageEvent) {
-        console.log('WORK LOGGER', event.data);
         const data = JSON.parse(event.data);
         if (data.type === 'USER_LOGIN') {
             this.startChat(data.payload.user);
@@ -124,11 +137,6 @@ class AppManager {
                     this.chat?.communication?.userFrom &&
                 data.payload.message.from !== this.chat?.communication?.userTo
             ) {
-                // const otherMessage = new Communication(
-                //     data.payload.message.from,
-                //     this.chat?.user.login,
-                //     this.chat?.user.
-                // );
                 if (this.chat) {
                     const com = new Communication(
                         data.payload.message.from,
@@ -150,7 +158,6 @@ class AppManager {
             this.chat?.communication?.updateHistory(data.payload.messages);
         }
         if (data.type === 'ERROR') {
-            console.log(data.payload);
             if (this.login) {
                 this.login.addErrorMessage(data.payload.error);
                 this.login.logout();
@@ -158,6 +165,10 @@ class AppManager {
         }
     }
 
+    /**
+     * Initiates a chat session with the specified user.
+     * @param {UserData} user - The user data for the chat session.
+     */
     startChat(user: UserData) {
         const pass = this.login.getSessionUser()?.password;
         if (pass) {
@@ -167,6 +178,10 @@ class AppManager {
         }
     }
 
+    /**
+     * Renders the specified HTML element in the application.
+     * @param {HTMLElement} element - The HTML element to render.
+     */
     render(element: HTMLElement) {
         if (!this.root) {
             console.error('dont find root');

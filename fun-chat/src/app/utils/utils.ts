@@ -1,15 +1,11 @@
-export function scrollToBottom(element: HTMLElement) {
+export function scrollToBottom(element: HTMLElement): void {
     element.scrollTo({
         top: element.scrollHeight,
-        // behavior: 'smooth',
     });
 }
 
-export function getDataFromTimeStamp(timestamp: number) {
+export function getDataFromTimeStamp(timestamp: number): string {
     const date = new Date(timestamp);
-    // const year = date.getFullYear();
-    // const month = date.getMonth()
-    // const day = date.getDate();
     const hours = date.getHours();
     const minutes = date.getMinutes();
     return `${hours}:${minutes}`;

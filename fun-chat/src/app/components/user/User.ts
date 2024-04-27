@@ -4,19 +4,46 @@ import { div, p, span } from '../../page/components/BaseComponents';
 import { IComponent } from '../../types/components-types';
 import Network from '../../services/Network';
 
+/**
+ * Represents a user in the chat.
+ */
 class User {
+    /**
+     * @type {string} The private name of the user.
+     */
     private readonly privateName: string;
 
+    /**
+     * @type {string} The private login of the user.
+     */
     private readonly privatelogin: string;
 
+    /**
+     * @type {boolean} Indicates whether the user is logged in.
+     */
     isLogined: boolean;
 
+    /**
+     * The view component representing the user.
+     * @type {IComponent | undefined}
+     */
     view: IComponent | undefined = undefined;
 
+    /**
+     * The color of the user's icon.
+     * @type {string}
+     */
     iconColor: string;
 
+    /**
+     * @type {string} The password of the user.
+     */
     private readonly password: string = '';
 
+    /**
+     * The number of unread messages for the user.
+     * @type {number}
+     */
     unreadMessageCount: number = 0;
 
     constructor(data: UserData, password: string = '') {
@@ -27,6 +54,10 @@ class User {
         this.password = password;
     }
 
+    /**
+     * Renders the user.
+     * @returns {IComponent} The rendered user component.
+     */
     render() {
         const icon = div(
             'flex-shrink-0 me-2 user-item__icon',
@@ -42,7 +73,7 @@ class User {
             div(
                 'pb-3 mb-0 small lh-sm w-100',
                 p('user-item__name', `${this.privateName}`),
-                span('user-item__status', `${this.createStatusView()}`)
+                span('user-item__status', `${this.createStatusString()}`)
             ),
             span(
                 'mx-2 unread-count',
@@ -53,6 +84,9 @@ class User {
         return this.view;
     }
 
+    /**
+     * Logs out the user.
+     */
     logout() {
         this.isLogined = false;
         const payloadObj = {
@@ -64,7 +98,11 @@ class User {
         Network.send({ id: '', type: 'USER_LOGOUT', payload: payloadObj });
     }
 
-    createStatusView() {
+    /**
+     * Creates the status for the user.
+     * @returns {string} The status.
+     */
+    createStatusString() {
         return this.status ? 'Online' : 'Offline';
     }
 
@@ -80,7 +118,7 @@ class User {
         return this.privateName;
     }
 
-    get login() {
+    get login(): string {
         return this.privatelogin;
     }
 

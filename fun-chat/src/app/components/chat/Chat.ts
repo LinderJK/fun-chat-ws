@@ -15,35 +15,50 @@ import User from '../user/User';
 import Communication from '../Communication/Communication';
 import { scrollToBottom } from '../../utils/utils';
 
+/**
+ * Represents a chat interface for communicating with users.
+ */
 class Chat {
+    /** The username of the current user. */
     userName: string;
 
-    user;
+    /** The current user object. */
+    user: User;
 
+    /** The list of users, initially null. */
     users: User[] | null = null;
 
-    // users: User[];
-
+    /** The root element of the chat view. */
     view: HTMLElement;
 
+    /** The component representing the active users list. */
     usersActiveList: IComponent | undefined = undefined;
 
+    /** The component representing the offline users list. */
     usersOfflineList: IComponent | undefined = undefined;
 
+    /** The component representing the search user list. */
     usersSearchList: IComponent | undefined = undefined;
 
+    /** The input field for typing messages. */
     inputMessage: IInput | undefined = undefined;
 
+    /** The about button component. */
     aboutBtn: IComponent | undefined = undefined;
 
+    /** Indicates whether the user is logged in. */
     isLoggedIn: boolean = false;
 
+    /** The chat field component. */
     chatField: IComponent | undefined = undefined;
 
+    /** The communication instance for messages. */
     communication: Communication | null = null;
 
+    /** The send message button component. */
     btnSend: IComponent | undefined = undefined;
 
+    /** The input field for searching users. */
     searchUserInput: IInput | undefined = undefined;
 
     constructor(user: UserData, password: string) {
@@ -60,10 +75,19 @@ class Chat {
         });
     }
 
+    /**
+     * Finds a user by login name.
+     * @param {string} userLogin - The login name of the user to find.
+     * @returns {User | undefined} The found user object or undefined if not found.
+     */
     findUser(userLogin: string) {
         return this.users?.find((el) => el.login === userLogin);
     }
 
+    /**
+     * Handles user search.
+     * @param {Event} e - The input event.
+     */
     searchUser(e: Event) {
         const inputField = e.target as HTMLInputElement;
         const inputValue = inputField.value;
@@ -82,6 +106,10 @@ class Chat {
         }
     }
 
+    /**
+     * Renders filtered users.
+     * @param {User[]} users - The filtered users.
+     */
     renderFilteredUser(users: User[]) {
         users.forEach((el) => {
             if (el.view) {
@@ -90,6 +118,9 @@ class Chat {
         });
     }
 
+    /**
+     * Initializes the chat.
+     */
     chatInit() {
         this.usersActiveList?.deleteChildren();
         this.usersOfflineList?.deleteChildren();
@@ -97,6 +128,10 @@ class Chat {
         Network.send({ id: null, type: 'USER_INACTIVE', payload: null });
     }
 
+    /**
+     * Renders the users.
+     * @param {UserData[]} data - The user data array.
+     */
     renderUsers(data: UserData[]) {
         this.users = [];
         data.forEach((el) => {
@@ -115,7 +150,11 @@ class Chat {
         });
     }
 
-    private startChat(data: UserData) {
+    /**
+     * Starts a chat session with the selected user.
+     * @param {UserData} data - The user data of the selected user.
+     */
+    startChat(data: UserData) {
         this.communication = new Communication(
             this.user.login,
             data.login,
@@ -135,6 +174,9 @@ class Chat {
         this.communication.getHistory();
     }
 
+    /**
+     * Sends a message.
+     */
     sendMessage() {
         const textMessage = this.getInputText();
         if (textMessage.length === 0) {
@@ -149,6 +191,10 @@ class Chat {
         }
     }
 
+    /**
+     * Gets the input message text.
+     * @returns {string} The input message text.
+     */
     getInputText() {
         if (this.inputMessage) {
             return this.inputMessage.value.trim();
@@ -156,6 +202,10 @@ class Chat {
         return '';
     }
 
+    /**
+     * Creates the chat view.
+     * @returns {{element: HTMLElement, map: Map<string, HTMLElement>}} The chat view element and its map.
+     */
     createView() {
         const btnLogout = button('chat-logout', 'Logout', () => {
             this.user.logout();

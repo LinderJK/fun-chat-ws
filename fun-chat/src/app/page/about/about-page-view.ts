@@ -1,4 +1,3 @@
-import './about-page.scss';
 import { button, div, h1, p } from '../components/BaseComponents';
 import { CallbackFn } from '../../types/other-types';
 
