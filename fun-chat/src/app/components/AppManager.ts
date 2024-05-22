@@ -51,11 +51,13 @@ class AppManager {
     addButtonListeners() {
         const viewAbout = this.aboutView?.element.getElement();
         if (viewAbout) {
-            this.login.aboutBtn?.addListener('click', () =>
-                this.render(viewAbout)
+            this.login.aboutBtn?.addListener(
+                'click',
+                this.render.bind(this, viewAbout)
             );
-            this.chat?.aboutBtn?.addListener('click', () =>
-                this.render(viewAbout)
+            this.chat?.aboutBtn?.addListener(
+                'click',
+                this.render.bind(this, viewAbout)
             );
         }
     }
@@ -112,56 +114,60 @@ class AppManager {
      */
     messageHandler(event: MessageEvent) {
         const data = JSON.parse(event.data);
-        if (data.type === 'USER_LOGIN') {
-            this.startChat(data.payload.user);
-        }
-        if (data.type === 'USER_LOGOUT') {
-            this.login.logout();
-            this.render(this.login.view);
-        }
-        if (data.type === 'USER_ACTIVE') {
-            this.chat?.renderUsers(data.payload.users);
-        }
-        if (data.type === 'USER_INACTIVE') {
-            this.chat?.renderUsers(data.payload.users);
-        }
-        if (data.type === 'USER_EXTERNAL_LOGOUT') {
-            this.chat?.chatInit();
-        }
-        if (data.type === 'USER_EXTERNAL_LOGIN') {
-            this.chat?.chatInit();
-        }
-        if (data.type === 'MSG_SEND') {
-            if (
-                data.payload.message.from !==
-                    this.chat?.communication?.userFrom &&
-                data.payload.message.from !== this.chat?.communication?.userTo
-            ) {
-                if (this.chat) {
-                    const com = new Communication(
-                        data.payload.message.from,
-                        this.chat?.user.login,
-                        this.chat?.user.status
-                    );
-                    com.createMessage(data.payload.message);
-
-                    const user = this.chat?.findUser(data.payload.message.from);
-                    if (user) {
-                        user.increaseUnreadMessageCount();
-                    }
-                    return;
-                }
-            }
-            this.chat?.communication?.appendMessage(data);
-        }
-        if (data.type === 'MSG_FROM_USER') {
-            this.chat?.communication?.updateHistory(data.payload.messages);
-        }
-        if (data.type === 'ERROR') {
-            if (this.login) {
-                this.login.addErrorMessage(data.payload.error);
+        switch (data.type) {
+            case 'USER_LOGIN':
+                this.startChat(data.payload.user);
+                break;
+            case 'USER_LOGOUT':
                 this.login.logout();
-            }
+                this.render(this.login.view);
+                break;
+            case 'USER_ACTIVE':
+            case 'USER_INACTIVE':
+                this.chat?.renderUsers(data.payload.users);
+                break;
+            case 'USER_EXTERNAL_LOGOUT':
+            case 'USER_EXTERNAL_LOGIN':
+                this.chat?.chatInit();
+                break;
+            case 'MSG_SEND':
+                if (
+                    data.payload.message.from !==
+                        this.chat?.communication?.userFrom &&
+                    data.payload.message.from !==
+                        this.chat?.communication?.userTo
+                ) {
+                    if (this.chat) {
+                        const com = new Communication(
+                            data.payload.message.from,
+                            this.chat?.user.login,
+                            this.chat?.user.status
+                        );
+                        com.createMessage(data.payload.message);
+
+                        const user = this.chat?.findUser(
+                            data.payload.message.from
+                        );
+                        if (user) {
+                            user.increaseUnreadMessageCount();
+                        }
+                        return;
+                    }
+                }
+                this.chat?.communication?.appendMessage(data);
+                break;
+            case 'MSG_FROM_USER':
+                this.chat?.communication?.updateHistory(data.payload.messages);
+                break;
+            case 'ERROR':
+                if (this.login) {
+                    this.login.addErrorMessage(data.payload.error);
+                    this.login.logout();
+                }
+                break;
+            default:
+                console.warn(`Unhandled message type: ${data.type}`);
+                break;
         }
     }
 
