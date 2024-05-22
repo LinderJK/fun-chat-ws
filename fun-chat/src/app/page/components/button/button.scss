@@ -1,17 +1,18 @@
+@import '../../../../stylesheets/abstracts/variables';
+
 .button {
-  color: white;
-  background-color: #977c5e;
-  border-color: #020100;
+    color: $btn-primary-color;
+    background-color: $btn-primary-background-color;
+    border-color: $btn-primary-border-color;
 
-  &:hover {
-    background-color: #efbd63;
-    border-color: #3c2907;
-  }
+    &:hover {
+        background-color: $btn-primary-background-color;
+        border-color: $btn-primary-hover-border-color;
+    }
 
-  &:disabled {
-    background-color: inherit;
-    border-color: #3c2907;
-    color: #3c2907;
-  }
-
+    &:disabled {
+        background-color: inherit;
+        border-color: $btn-disabled-color;
+        color: $btn-disabled-color;
+    }
 }

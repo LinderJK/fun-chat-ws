@@ -1,50 +1,51 @@
+@import '../../../stylesheets/abstracts/variables';
+
 .dialog-info {
-  border: 1px solid black;
-  background-color: bisque;
+    border: 1px solid black;
+    background-color: $primary-background-color;
 }
 
 .dialog-container {
-  display: flex;
-  flex-direction: column;
-  max-height: 500px;
-  overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    overflow-y: scroll;
 }
 
 .message {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid black;
-  background-color: bisque;
-  padding: 5px;
-  border-radius: 15px;
-  max-width: 70%;
-  margin: 2px;
-
-  & p {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    background-color: $primary-background-color;
+    padding: 5px;
+    border-radius: 15px;
+    max-width: 70%;
     margin: 2px;
-    word-wrap: break-word;
-  }
 
-  &__text {
-    font-style: italic;
+    & p {
+        margin: 2px;
+        word-wrap: break-word;
+    }
 
-  }
+    &__text {
+        font-style: italic;
+    }
 
-  &__time {
-    border-top: 1px solid chocolate;
-    font-size: 0.8rem;
-  }
+    &__time {
+        border-top: 1px solid $primary-border-color;
+        font-size: 0.8rem;
+    }
 
-  &__author {
-    border-bottom: 1px solid chocolate;
-    font-weight: bold;
-  }
+    &__author {
+        border-bottom: 1px solid $primary-border-color;
+        font-weight: bold;
+    }
 
-  &--right {
-    align-self: flex-end;
-  }
+    &--right {
+        align-self: flex-end;
+    }
 
-  &--left {
-    align-self: flex-start;
-  }
+    &--left {
+        align-self: flex-start;
+    }
 }

@@ -1,17 +1,17 @@
+@import '../../../stylesheets/abstracts/variables';
 .login-container {
-  padding: 10px;
+    padding: 10px;
 }
 
 .login-content {
-  max-width: 500px;
-  margin: 0 auto;
+    max-width: 500px;
+    margin: 0 auto;
 
-  &__description {
-    margin: 10px 0;
-  }
+    &__description {
+        margin: 10px 0;
+    }
 }
-.error-message{
-  font-weight: bold;
-  color: red;
+.error-message {
+    font-weight: bold;
+    color: $error-color;
 }
-
