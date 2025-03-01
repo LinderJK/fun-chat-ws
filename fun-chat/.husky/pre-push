@@ -1,4 +1,0 @@
-# .husky/pre-push
-cd fun-chat
-npm run validate-branch
-npm run lint
